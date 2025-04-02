@@ -1,0 +1,10 @@
+{
+    "name": "wintheme/polaris",
+    "title": "Polaris",
+    "image": "https://cdn.uvodo.com/themes/polaris-cover.png",
+    "version": "1.0.20",
+    "templates_path": "/views/templates",
+    "public": [
+        "/assets"
+    ]
+}

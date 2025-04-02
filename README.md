@@ -1,1 +1,1 @@
-# Polaris-main
+# Polaris Theme
