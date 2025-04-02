@@ -1,66 +1,81 @@
-# Polaris Theme
-# Polaris Theme - Developer Documentation
+# Polaris Theme Developer Documentation
 
-## Overview
-
-Polaris is a modern, versatile theme designed for Next.js applications. This documentation provides comprehensive guidance on theme structure, components, utilities, and implementation patterns for front-end developers working with the Polaris theme.
+This documentation provides a comprehensive guide to the Polaris theme for Next.js applications. As a modern, versatile theme, Polaris is designed to offer developers a robust framework for creating e-commerce applications.
 
 ## Table of Contents
 
-1. [Project Structure](#project-structure)
-2. [Core Components](#core-components)
-3. [Layout System](#layout-system)
-4. [Styling Approach](#styling-approach)
-5. [Navigation Components](#navigation-components)
-6. [UI Components](#ui-components)
-7. [Form Components](#form-components)
-8. [Data Display Components](#data-display-components)
-9. [Utility Functions](#utility-functions)
-10. [Theme Configuration](#theme-configuration)
-11. [Responsive Design](#responsive-design)
-12. [Accessibility Guidelines](#accessibility-guidelines)
-13. [Performance Considerations](#performance-considerations)
-14. [Development Workflow](#development-workflow)
+1. [Theme Overview](#theme-overview)
+2. [Configuration Files](#configuration-files)
+3. [Theme Structure](#theme-structure)
+4. [Layout System](#layout-system)
+5. [Components](#components)
+6. [Sections](#sections)
+7. [Styling Approach](#styling-approach)
+8. [Templates](#templates)
+9. [Customization Options](#customization-options)
+10. [Best Practices](#best-practices)
 
-## Project Structure
+## Theme Overview
 
-The Polaris theme is organized with a modular structure to promote maintainability and scalability:
+Polaris is a modern e-commerce theme designed for Next.js applications, providing a clean and customizable user interface. It follows a modular architecture with well-organized components, templates, and styling approaches.
+
+Key features:
+- Responsive design
+- Component-based architecture
+- Customizable through settings JSON files
+- Support for multiple layouts (default, dashboard, landing)
+- E-commerce focused components and sections
+
+## Configuration Files
+
+The Polaris theme includes several configuration files that control its appearance and behavior:
+
+### Main Configuration (config.json)
+```json
+{
+    "name": "wintheme/polaris",
+    "title": "Polaris",
+    "image": "https://cdn.uvodo.com/themes/polaris-cover.png",
+    "version": "1.0.20",
+    "templates_path": "/views/templates",
+    "public": [
+        "/assets"
+    ]
+}
+```
+
+### Settings Files
+
+Settings are organized in JSON files within the `settings` directory:
+
+- **colors.json**: Theme color definitions for various elements
+- **fonts.json**: Font settings and Google Fonts integration
+- **header.json**: Header configuration settings
+- **home.json**: Homepage elements configuration
+- **settings.json**: General theme settings
+
+## Theme Structure
+
+The Polaris theme follows a well-organized directory structure:
 
 ```
 /Polaris-main
-├── /app                  # Next.js application pages and routing
-├── /components           # Reusable UI components
-│   ├── /blocks           # Larger composite components/sections
-│   ├── /common           # General-purpose components
-│   ├── /layout           # Layout components
-│   ├── /navigation       # Navigation-related components
-│   └── /ui               # Atomic UI components
-├── /lib                  # Utility functions and helpers
-├── /providers            # Context providers
-├── /public               # Static assets
-├── /styles               # Global styles and theme variables
-└── /types                # TypeScript type definitions
+├── /views                      # Main view templates
+│   ├── /components             # Reusable UI components
+│   ├── /layouts                # Layout templates
+│   ├── /sections               # Page sections
+│   ├── /snippets               # Reusable code snippets
+│   └── /templates              # Page templates
+├── /settings                   # Configuration JSON files
+└── /assets                     # Static assets (CSS, JS, images)
 ```
 
-## Core Components
+### Components Directory
 
-### Page Templates
-
-Page templates serve as the foundation for different page types within the application:
-
-- `DefaultLayout`: The standard page layout with header, footer, and main content area
-- `DashboardLayout`: Layout optimized for admin/dashboard interfaces
-- `LandingLayout`: Layout designed for marketing and landing pages
-
-### Component Hierarchy
-
-Polaris follows a component hierarchy that promotes reusability:
-
-1. **Atoms**: Basic UI elements (buttons, inputs, icons)
-2. **Molecules**: Combinations of atoms (form fields, cards, list items)
-3. **Organisms**: Complex UI sections (navigation bars, sidebars, content blocks)
-4. **Templates**: Page layouts that arrange organisms
-5. **Pages**: Complete views composed of templates and organisms
+Contains reusable UI components organized by functionality:
+- Basic UI elements (buttons, inputs, cards, etc.)
+- Navigation components (menus, breadcrumbs)
+- Layout components (grids, containers)
 
 ## Layout System
 
@@ -68,20 +83,26 @@ Polaris uses a flexible grid system based on CSS Grid and Flexbox:
 
 ### Grid System
 
-The theme implements a 12-column grid layout that adapts to different screen sizes:
+The theme implements a responsive 12-column grid layout that adapts to different screen sizes:
 
-```jsx
-<Grid columns={{ base: 1, md: 2, lg: 3 }} gap="6">
-  <GridItem>Content 1</GridItem>
-  <GridItem>Content 2</GridItem>
-  <GridItem>Content 3</GridItem>
-</Grid>
+```twig
+<div class="row gutter-32 mobile-gutter-16">
+    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6">
+        <!-- Content -->
+    </div>
+</div>
 ```
+
+Bootstrap-inspired column classes for responsive layouts:
+- `col-xl-*`: Extra large screens (≥1200px)
+- `col-lg-*`: Large screens (≥992px)
+- `col-md-*`: Medium screens (≥768px)
+- `col-sm-*`: Small screens (≥576px)
+- `col-*`: Extra small screens (<576px)
 
 ### Spacing System
 
-Consistent spacing is applied using a predefined scale:
-
+The theme uses a consistent spacing scale:
 - `space-1`: 0.25rem (4px)
 - `space-2`: 0.5rem (8px)
 - `space-3`: 0.75rem (12px)
@@ -92,499 +113,254 @@ Consistent spacing is applied using a predefined scale:
 - `space-10`: 4rem (64px)
 - `space-12`: 6rem (96px)
 
+## Components
+
+### Navigation Components
+
+#### NavBar
+Main navigation component supporting desktop and mobile layouts:
+
+```twig
+{% include "/components/menu.twig" | storefront_path with {'items' : menus.header} %}
+```
+
+#### Drawer Menu
+Side navigation for mobile devices:
+
+```twig
+{% include "/components/drawer-menu.twig" | storefront_path with {'items' : menus.sidebar} %}
+```
+
+#### MegaMenu
+Advanced dropdown menu system:
+
+```twig
+{% include "/components/mega-menu.twig" | storefront_path with {'items' : menus.header} %}
+```
+
+#### Mobile Menu
+Special menu for mobile devices:
+
+```twig
+{% include "/components/mobile-menu.twig" | storefront_path with {
+    'sidebarItems' : menus.sidebar,
+    'items' : menus.header
+} %}
+```
+
+### Product Components
+
+#### Product List Item
+Component for displaying products in different layouts:
+
+```twig
+{% include "/snippets/product-list-item-grid.twig" | storefront_path with {'product' : product} %}
+```
+
+#### Product Detail
+Component for displaying product details:
+
+```twig
+{% include 'snippets/product-detail.twig' | storefront_path %}
+```
+
+### Cart Components
+
+#### Cart
+Shopping cart component:
+
+```twig
+{% include '/snippets/cart.twig' | storefront_path with {'cart' : cart} %}
+```
+
+#### Basket
+Mini cart component:
+
+```twig
+{% include "/snippets/basket.twig" | storefront_path with {'cart' : cart} %}
+```
+
+## Sections
+
+Sections are larger building blocks used to compose pages:
+
+### Slider Section
+Displays a fullwidth image slider:
+
+```twig
+{% include '/sections/slider.twig' | storefront_path %}
+```
+
+### Products Section
+Displays a curated list of products:
+
+```twig
+{% include '/sections/products.twig' | storefront_path with {
+    items: products,
+    show: 24,
+    className: 'product-slider'
+} %}
+```
+
+### Collections Section
+Displays product collections:
+
+```twig
+{% include '/sections/collections.twig' | storefront_path %}
+```
+
+### Connect Section
+Email subscription section:
+
+```twig
+{% include '/sections/connect.twig' | storefront_path %}
+```
+
+### Media Section
+Video and media content section:
+
+```twig
+{% include '/sections/media.twig' | storefront_path %}
+```
+
 ## Styling Approach
 
 Polaris uses a hybrid styling approach:
 
-### CSS Modules
-
-Component-specific styles are managed using CSS Modules:
-
-```jsx
-// Button.module.css
-.button {
-  /* styles */
-}
-
-// Button.jsx
-import styles from './Button.module.css';
-
-export const Button = (props) => (
-  <button className={styles.button} {...props} />
-);
-```
-
-### Utility Classes
-
-Common styling patterns are available through utility classes:
-
-```jsx
-<div className="flex items-center justify-between p-4 mb-6 rounded-lg">
-  {/* content */}
-</div>
-```
+### CSS Structure
+- Component-specific styles embedded within component files
+- Global styles defined in external stylesheets
+- Theme variables using CSS custom properties
 
 ### Theme Variables
 
-Global theme variables are defined in CSS custom properties:
+Global theme variables are defined using CSS custom properties:
 
 ```css
 :root {
   --color-primary: #3853D8;
   --color-secondary: #6941C6;
-  --color-accent: #F05D23;
   --color-background: #FFFFFF;
   --color-text: #101828;
   /* etc. */
 }
 ```
 
-## Navigation Components
+### Responsive Design
 
-### NavBar
-
-The primary navigation component for desktop and mobile:
-
-```jsx
-<NavBar
-  logo="/images/logo.svg"
-  items={[
-    { label: 'Home', href: '/' },
-    { label: 'Features', href: '/features' },
-    { label: 'Pricing', href: '/pricing' },
-    { label: 'Contact', href: '/contact' },
-  ]}
-/>
-```
-
-### Sidebar
-
-Side navigation commonly used in dashboard layouts:
-
-```jsx
-<Sidebar
-  items={[
-    {
-      label: 'Dashboard',
-      icon: 'dashboard',
-      href: '/dashboard',
-    },
-    {
-      label: 'Analytics',
-      icon: 'chart',
-      href: '/analytics',
-    },
-    // etc.
-  ]}
-/>
-```
-
-### Breadcrumbs
-
-Navigation aid showing the current page location:
-
-```jsx
-<Breadcrumbs
-  items={[
-    { label: 'Home', href: '/' },
-    { label: 'Products', href: '/products' },
-    { label: 'Current Product', href: '#', current: true },
-  ]}
-/>
-```
-
-## UI Components
-
-### Buttons
-
-Buttons come in multiple variants and sizes:
-
-```jsx
-<Button variant="primary" size="md">Primary Action</Button>
-<Button variant="secondary" size="md">Secondary Action</Button>
-<Button variant="outline" size="sm">Outline</Button>
-<Button variant="ghost" size="lg">Ghost</Button>
-<Button variant="link">Link Button</Button>
-```
-
-### Icons
-
-Polaris includes a comprehensive icon system:
-
-```jsx
-<Icon name="arrow-right" size="md" />
-<Icon name="check" size="sm" color="success" />
-```
-
-### Cards
-
-Containers for related content:
-
-```jsx
-<Card>
-  <CardHeader title="Card Title" />
-  <CardBody>
-    {/* Card content */}
-  </CardBody>
-  <CardFooter>
-    <Button>Action</Button>
-  </CardFooter>
-</Card>
-```
-
-### Tabs
-
-Content organization through tabbed interfaces:
-
-```jsx
-<Tabs>
-  <TabList>
-    <Tab>Overview</Tab>
-    <Tab>Details</Tab>
-    <Tab>Settings</Tab>
-  </TabList>
-  <TabPanels>
-    <TabPanel>{/* Overview content */}</TabPanel>
-    <TabPanel>{/* Details content */}</TabPanel>
-    <TabPanel>{/* Settings content */}</TabPanel>
-  </TabPanels>
-</Tabs>
-```
-
-## Form Components
-
-### Input Fields
-
-Text input components:
-
-```jsx
-<FormField label="Username" required>
-  <Input
-    type="text"
-    placeholder="Enter username"
-    name="username"
-  />
-</FormField>
-
-<FormField label="Password" required>
-  <Input
-    type="password"
-    placeholder="Enter password"
-    name="password"
-  />
-</FormField>
-```
-
-### Select
-
-Dropdown selection component:
-
-```jsx
-<FormField label="Country">
-  <Select
-    name="country"
-    options={[
-      { value: 'us', label: 'United States' },
-      { value: 'ca', label: 'Canada' },
-      { value: 'uk', label: 'United Kingdom' },
-    ]}
-  />
-</FormField>
-```
-
-### Checkbox and Radio
-
-Selection controls:
-
-```jsx
-<Checkbox label="Remember me" name="remember" />
-
-<RadioGroup name="plan" label="Select a plan">
-  <Radio value="basic" label="Basic Plan" />
-  <Radio value="pro" label="Pro Plan" />
-  <Radio value="enterprise" label="Enterprise" />
-</RadioGroup>
-```
-
-## Data Display Components
-
-### Table
-
-Component for displaying tabular data:
-
-```jsx
-<Table>
-  <TableHead>
-    <TableRow>
-      <TableHeader>Name</TableHeader>
-      <TableHeader>Email</TableHeader>
-      <TableHeader>Role</TableHeader>
-      <TableHeader>Status</TableHeader>
-    </TableRow>
-  </TableHead>
-  <TableBody>
-    <TableRow>
-      <TableCell>John Doe</TableCell>
-      <TableCell>john@example.com</TableCell>
-      <TableCell>Admin</TableCell>
-      <TableCell>
-        <Badge variant="success">Active</Badge>
-      </TableCell>
-    </TableRow>
-    {/* Additional rows */}
-  </TableBody>
-</Table>
-```
-
-### Badge
-
-Status indicators:
-
-```jsx
-<Badge variant="primary">New</Badge>
-<Badge variant="success">Active</Badge>
-<Badge variant="warning">Pending</Badge>
-<Badge variant="error">Error</Badge>
-<Badge variant="info">Info</Badge>
-```
-
-### Progress
-
-Progress indicators:
-
-```jsx
-<Progress value={75} max={100} />
-<Spinner size="md" />
-```
-
-## Utility Functions
-
-### Date Formatting
-
-```jsx
-import { formatDate } from '@/lib/date';
-
-// Format a date
-formatDate(new Date(), 'MMM dd, yyyy'); // 'Apr 02, 2025'
-```
-
-### Number Formatting
-
-```jsx
-import { formatNumber, formatCurrency } from '@/lib/number';
-
-// Format numbers
-formatNumber(1234567.89); // '1,234,567.89'
-formatCurrency(1234.56, 'USD'); // '$1,234.56'
-```
-
-### String Utilities
-
-```jsx
-import { truncate, slugify } from '@/lib/string';
-
-// Truncate long text
-truncate('Long text that needs to be shortened', 20); // 'Long text that needs...'
-
-// Convert string to URL slug
-slugify('Product Title Here'); // 'product-title-here'
-```
-
-## Theme Configuration
-
-The theme can be customized through the `theme.config.js` file:
-
-```js
-// theme.config.js
-module.exports = {
-  colors: {
-    primary: '#3853D8',
-    secondary: '#6941C6',
-    // Additional colors
-  },
-  fonts: {
-    body: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
-    heading: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
-    mono: 'SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-  },
-  // Additional theme options
-};
-```
-
-## Responsive Design
-
-Polaris is designed with a mobile-first approach. The theme includes breakpoints for different screen sizes:
-
+Polaris is built with a mobile-first approach, using standard breakpoints:
 - `sm`: 640px
 - `md`: 768px
 - `lg`: 1024px
 - `xl`: 1280px
 - `2xl`: 1536px
 
-Responsive utilities can be used in class names:
+Media queries are used for responsive styling:
 
-```html
-<div class="hidden md:block">
-  <!-- Visible only on medium screens and larger -->
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-  <!-- Responsive grid layout -->
-</div>
+```css
+@media (max-width: 767px) {
+    .navigation-container {
+        display: none;
+    }
+}
 ```
 
-## Accessibility Guidelines
+## Templates
 
-Polaris is built with accessibility in mind:
+Polaris includes several page templates:
 
-### Keyboard Navigation
+### Base Layout
 
-All interactive elements should be accessible via keyboard:
+The `theme.twig` layout serves as the base template:
 
-```jsx
-<Button
-  onClick={handleClick}
-  aria-label="Close dialog"
->
-  <Icon name="x" />
-</Button>
+```twig
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags and CSS -->
+</head>
+<body>
+    {% include '/sections/header.twig' | storefront_path %}
+    
+    {% block body %}{% endblock %}
+    
+    {% include '/sections/footer.twig' | storefront_path %}
+    
+    <!-- JavaScript -->
+</body>
+</html>
 ```
 
-### ARIA Attributes
+### Page Templates
 
-Proper ARIA attributes are used throughout the theme:
+Standard page templates include:
 
-```jsx
-<Dialog
-  isOpen={isOpen}
-  onClose={onClose}
-  aria-labelledby="dialog-title"
->
-  <DialogHeader id="dialog-title">Dialog Title</DialogHeader>
-  <DialogBody>Content</DialogBody>
-</Dialog>
+- **index.twig**: Homepage template
+- **product.twig**: Product detail page
+- **collection.twig**: Collection page
+- **cart.twig**: Cart page
+- **account.twig**: Customer account pages
+
+### Customer Templates
+
+Templates for customer-related pages:
+
+- **login.twig**: Login page
+- **register.twig**: Registration page
+- **addresses.twig**: Address management
+- **orders.twig**: Order history
+
+## Customization Options
+
+### Theme Settings
+
+Settings can be accessed in templates using the `setting` filter:
+
+```twig
+{{ "home.section_title" | setting }}
 ```
 
-### Focus Management
+### Theme Colors
 
-Focus management utilities help maintain proper focus states:
+Colors can be customized in the `colors.json` file and are applied through the `color.twig` layout:
 
-```jsx
-import { useFocus } from '@/lib/accessibility';
-
-const { focusRef, setFocus } = useFocus();
-
-// Set focus to an element
-<button ref={focusRef} onClick={handleClick}>
-  Click Me
-</button>
+```twig
+{% include '/layouts/color.twig' | storefront_path %}
 ```
 
-## Performance Considerations
+### Custom Fonts
 
-### Code Splitting
+Font settings are managed in `fonts.json` and can be accessed:
 
-Components are designed to support code splitting:
-
-```jsx
-import dynamic from 'next/dynamic';
-
-const DynamicComponent = dynamic(() => import('@/components/HeavyComponent'), {
-  loading: () => <Spinner />,
-});
+```twig
+{% set selectedFontData = "fonts.primary_font" | setting_data_from_option %}
 ```
 
-### Image Optimization
+### Custom CSS and JavaScript
 
-Use Next.js Image component for optimal image loading:
+Custom code can be added through the settings:
 
-```jsx
-import Image from 'next/image';
-
-<Image
-  src="/images/hero.jpg"
-  alt="Hero image"
-  width={1200}
-  height={600}
-  priority
-/>
+```twig
+{{ "settings.custom_code_for_header" | setting | raw }}
 ```
 
-### Lazy Loading
+## Best Practices
 
-Components support lazy loading for better performance:
+1. **Component Reusability**: Use components from the components directory whenever possible to maintain consistency.
 
-```jsx
-<LazyLoad height={200} once>
-  <ComplexComponent />
-</LazyLoad>
-```
+2. **Responsive Design**: Test layouts on multiple screen sizes and use the provided responsive classes.
 
-## Development Workflow
+3. **Performance Optimization**:
+   - Use the proper image format and size
+   - Implement lazy loading for components
+   - Minimize JavaScript execution
 
-### Component Development
+4. **Settings Organization**: Keep settings organized by functionality in the appropriate JSON files.
 
-When creating new components:
+5. **Template Inheritance**: Extend the base theme template to maintain consistency.
 
-1. Create the component file in the appropriate directory
-2. Create accompanying style file (if using CSS Modules)
-3. Export the component from the directory's index file
-4. Document props using JSDoc or TypeScript
+6. **Accessibility**: Ensure components maintain proper accessibility attributes.
 
-Example:
+7. **JavaScript Modularization**: Keep JavaScript modular and event-driven for better maintainability.
 
-```jsx
-/**
- * Alert component for displaying notifications
- * @param {Object} props - Component props
- * @param {string} props.variant - Alert variant (info, success, warning, error)
- * @param {string} props.title - Alert title
- * @param {React.ReactNode} props.children - Alert content
- * @param {boolean} props.isDismissable - Whether the alert can be dismissed
- * @param {function} props.onDismiss - Handler for dismiss action
- */
-export const Alert = ({
-  variant = 'info',
-  title,
-  children,
-  isDismissable = false,
-  onDismiss,
-  ...props
-}) => {
-  // Component implementation
-};
-```
-
-### Testing Components
-
-Components should be tested using the project's testing tools:
-
-```jsx
-// Alert.test.jsx
-import { render, screen, fireEvent } from '@testing-library/react';
-import { Alert } from './Alert';
-
-describe('Alert', () => {
-  test('renders with correct title', () => {
-    render(<Alert title="Test Alert">Content</Alert>);
-    expect(screen.getByText('Test Alert')).toBeInTheDocument();
-  });
-
-  test('calls onDismiss when dismiss button is clicked', () => {
-    const onDismiss = jest.fn();
-    render(
-      <Alert title="Test Alert" isDismissable onDismiss={onDismiss}>
-        Content
-      </Alert>
-    );
-    fireEvent.click(screen.getByLabelText('Dismiss'));
-    expect(onDismiss).toHaveBeenCalled();
-  });
-});
-```
-
-## Conclusion
-
-This documentation provides an overview of the Polaris theme structure and components. Front-end developers should refer to this guide when implementing and extending the theme. For specific implementation details, refer to the component source code and comments.
-
-For questions or clarification, please contact the theme maintainers or refer to the official repository documentation.
+This documentation provides an overview of the Polaris theme structure and components. For specific implementation details, refer to the source code comments and structure.
