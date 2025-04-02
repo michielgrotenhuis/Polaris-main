@@ -344,6 +344,251 @@ Custom code can be added through the settings:
 {{ "settings.custom_code_for_header" | setting | raw }}
 ```
 
+
+# jQuery Modal and Toast Libraries Documentation
+
+This documentation provides an overview of the jQuery Modal and jQuery Toast libraries implemented in this project, along with usage examples.
+
+## Table of Contents
+
+- [jQuery Modal](#jquery-modal)
+  - [Installation](#modal-installation)
+  - [Usage](#modal-usage)
+  - [Options](#modal-options)
+  - [Events](#modal-events)
+  - [Methods](#modal-methods)
+- [jQuery Toast](#jquery-toast)
+  - [Installation](#toast-installation)
+  - [Usage](#toast-usage)
+  - [Options](#toast-options)
+  - [Methods](#toast-methods)
+
+---
+
+## jQuery Modal
+
+jQuery Modal is a lightweight modal dialog implementation that provides a simple way to display modal windows in your web application.
+
+### Modal Installation
+
+The library is already included in the project in:
+
+```
+assets/scripts/libs/jquery-modal/jquery.modal.min.js
+assets/scripts/libs/jquery-modal/jquery.modal.min.css
+```
+
+Make sure to include jQuery before including the modal library.
+
+### Modal Usage
+
+There are several ways to use jQuery Modal:
+
+#### 1. Using HTML Markup
+
+```html
+<!-- Link with rel="modal:open" -->
+<a href="#ex1" rel="modal:open">Open Modal</a>
+
+<!-- Modal HTML content -->
+<div id="ex1" class="modal">
+  <p>This is the modal content.</p>
+  <a href="#" rel="modal:close">Close</a>
+</div>
+```
+
+#### 2. Using JavaScript
+
+```javascript
+// Open from JavaScript
+$('#ex1').modal();
+
+// With options
+$('#ex1').modal({
+  fadeDuration: 250,
+  fadeDelay: 0.80
+});
+
+// Open AJAX modal
+$('a.modal-ajax').click(function(event) {
+  event.preventDefault();
+  $(this).modal({
+    fadeDuration: 250
+  });
+});
+```
+
+### Modal Options
+
+The following options are available:
+
+```javascript
+$.modal.defaults = {
+  closeExisting: true,    // Close existing modals
+  escapeClose: true,      // Close modal when escape key is pressed
+  clickClose: true,       // Close modal when clicked outside
+  closeText: 'Close',     // Text for close button
+  closeClass: '',         // Additional class for close button
+  modalClass: 'modal',    // Class for modal
+  blockerClass: 'jquery-modal', // Class for modal blocker
+  spinnerHtml: '...',     // HTML for spinner
+  showSpinner: true,      // Show spinner or not
+  showClose: true,        // Show close button or not
+  fadeDuration: null,     // Duration of fade effect
+  fadeDelay: 1.0          // Delay for fade
+};
+```
+
+### Modal Events
+
+The following events are triggered:
+
+```javascript
+$('#modal').on($.modal.BEFORE_BLOCK, function(event, modal) {});
+$('#modal').on($.modal.BLOCK, function(event, modal) {});
+$('#modal').on($.modal.BEFORE_OPEN, function(event, modal) {});
+$('#modal').on($.modal.OPEN, function(event, modal) {});
+$('#modal').on($.modal.BEFORE_CLOSE, function(event, modal) {});
+$('#modal').on($.modal.CLOSE, function(event, modal) {});
+$('#modal').on($.modal.AFTER_CLOSE, function(event, modal) {});
+```
+
+For AJAX modals, additional events are available:
+
+```javascript
+$(document).on($.modal.AJAX_SEND, function(event, modal) {});
+$(document).on($.modal.AJAX_SUCCESS, function(event, modal) {});
+$(document).on($.modal.AJAX_FAIL, function(event, modal) {});
+$(document).on($.modal.AJAX_COMPLETE, function(event, modal) {});
+```
+
+### Modal Methods
+
+```javascript
+// Close modal programmatically
+$.modal.close();
+
+// Check if a modal is currently active
+$.modal.isActive();
+
+// Get the currently active modal
+$.modal.getCurrent();
+```
+
+---
+
+## jQuery Toast
+
+jQuery Toast provides a flexible notification system with various styles and options.
+
+### Toast Installation
+
+The library is already included in the project in:
+
+```
+assets/scripts/libs/jquery-toast/jquery.toast.min.js
+assets/scripts/libs/jquery-toast/jquery.toast.min.css
+```
+
+Make sure to include jQuery before including the toast library.
+
+### Toast Usage
+
+#### Basic Usage
+
+```javascript
+// Display a simple toast
+$.toast("Your message here");
+
+// Display toast with options
+$.toast({
+  text: "This is a toast message",
+  heading: 'Note',
+  icon: 'info',
+  showHideTransition: 'fade',
+  allowToastClose: true,
+  hideAfter: 3000,
+  stack: 5,
+  position: 'top-right',
+  textAlign: 'left',
+  loader: true,
+  loaderBg: '#9EC600'
+});
+```
+
+#### Different Toast Types
+
+```javascript
+// Success toast
+$.toast({
+  heading: 'Success',
+  text: 'Operation completed successfully',
+  icon: 'success',
+  position: 'top-right'
+});
+
+// Error toast
+$.toast({
+  heading: 'Error',
+  text: 'An error occurred',
+  icon: 'error',
+  position: 'top-right'
+});
+
+// Info toast
+$.toast({
+  heading: 'Information',
+  text: 'Important information',
+  icon: 'info',
+  position: 'top-right'
+});
+
+// Warning toast
+$.toast({
+  heading: 'Warning',
+  text: 'Attention required',
+  icon: 'warning',
+  position: 'top-right'
+});
+```
+
+### Toast Options
+
+The following options are available:
+
+```javascript
+$.toast.options = {
+  text: '',                  // The message to display
+  heading: '',               // The heading of the toast
+  showHideTransition: 'fade', // fade, slide or plain
+  allowToastClose: true,     // Allow user to close toast
+  hideAfter: 3000,           // Duration in ms to auto-close
+  loader: true,              // Show loader
+  loaderBg: '#9EC600',       // Background color of loader
+  stack: 5,                  // Number of toasts that can be shown at once
+  position: 'bottom-left',   // top-left, top-right, bottom-left, bottom-right, etc.
+};
+```
+
+### Toast Methods
+
+```javascript
+// Create a toast instance
+var myToast = $.toast({ text: 'Some message' });
+
+// Reset all toasts
+myToast.reset();
+
+// Update toast options
+myToast.update({
+  text: 'New message',
+  hideAfter: 5000
+});
+
+// Close toast manually
+myToast.close();
+
+
 ## Best Practices
 
 1. **Component Reusability**: Use components from the components directory whenever possible to maintain consistency.
@@ -362,5 +607,6 @@ Custom code can be added through the settings:
 6. **Accessibility**: Ensure components maintain proper accessibility attributes.
 
 7. **JavaScript Modularization**: Keep JavaScript modular and event-driven for better maintainability.
+
 
 This documentation provides an overview of the Polaris theme structure and components. For specific implementation details, refer to the source code comments and structure.
