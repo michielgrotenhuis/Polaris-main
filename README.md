@@ -64,10 +64,26 @@ The Polaris theme follows a well-organized directory structure:
 │   ├── /components             # Reusable UI components
 │   ├── /layouts                # Layout templates
 │   ├── /sections               # Page sections
+│      ├── /mobile              # mobile view page sections
 │   ├── /snippets               # Reusable code snippets
 │   └── /templates              # Page templates
+│      └── /customers           # Customer page templates
+│      └── /errors              # 403 and 404 error pages
 ├── /settings                   # Configuration JSON files
 └── /assets                     # Static assets (CSS, JS, images)
+│   └── /images                 # Images
+│      └── /favicon             # Favicons in diffrent formats
+│      └── /logo                # logo
+│      └── /template            # template
+│         └── /bg               # Background
+│         └── /product          # Fallback product images
+│   └── /logo                   # Site logo
+│   └── /scripts                # Scripts
+│       └── /libs               # Libaries
+│         └── /jquery           # jquery
+│         └── /jquery-modal     # jquery-modal
+│         └── /jquery-toast     # jquery-toast
+│   └── /styles                 # Main Styles
 ```
 
 ### Components Directory
