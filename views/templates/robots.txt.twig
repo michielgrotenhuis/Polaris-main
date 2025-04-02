@@ -1,0 +1,53 @@
+# we use Uvodo as our ecommerce platform
+
+User-agent: *
+Disallow: /admin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /checkout/*
+Disallow: /account
+Disallow: /account/*
+Disallow: /*?preview*
+Disallow: /apple-app-site-association
+
+Sitemap: {{ base_url }}/sitemap.xml
+
+# Google adsbot ignores robots.txt unless specifically named!
+User-agent: adsbot-google
+Disallow: /checkout
+Disallow: /checkout/*
+
+Disallow: /cart
+Disallow: /*?preview*
+Disallow: /account
+Disallow: /account/*
+User-agent: Nutch
+Disallow: /
+
+User-agent: AhrefsBot
+Crawl-delay: 10
+Disallow: /admin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /checkout/*
+Disallow: /account
+Disallow: /*?preview*
+Disallow: /apple-app-site-association
+Sitemap: {{ base_url }}/sitemap.xml
+
+User-agent: AhrefsSiteAudit
+Crawl-delay: 10
+Disallow: /admin
+Disallow: /cart
+Disallow: /checkout
+Disallow: /checkout/*
+Disallow: /account
+Disallow: /*?preview*
+Disallow: /apple-app-site-association
+Sitemap: {{ base_url }}/sitemap.xml
+
+User-agent: MJ12bot
+Crawl-Delay: 10
+
+User-agent: Pinterest
+Crawl-delay: 1

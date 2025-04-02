@@ -1,0 +1,71 @@
+<style>
+    .menu-show {
+        overflow: hidden !important;
+    }
+
+    .header-holder--navigation--mobile {
+        padding: 0;
+        overflow: auto;
+    }
+
+    .header-holder--navigation--top {
+        padding: 16px;
+        border-bottom: 1px solid #eaeaea;
+        margin-bottom: 0;
+    }
+
+    .header-holder--navigation--mobile .header-holder--navigation--link {
+        padding: 0;
+    }
+
+    .mob-nav-divider {
+        border: 0;
+        margin: 0;
+        background-color: #f1f1f1;
+        width: 100%;
+        height: 10px;
+        display: list-item;
+    }
+
+    .phone-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        border-bottom: 1px solid #eaeaea;
+        border-top: 1px solid #eaeaea;
+        margin-bottom: 0;
+    }
+
+    .phone-bar a {
+        color: #000;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        margin-left: 8px;
+    }
+</style>
+
+{% include '/components/menu-accordion.twig' | storefront_path with {
+    items : sidebarItems,
+    className: 'uv-sidebar'
+} %}
+
+<hr class="mob-nav-divider">
+
+{% include '/components/menu-accordion.twig' | storefront_path with {
+    items : items,
+    className: 'uv-bottom',
+    fontSize: '14px'
+} %}
+
+<div class="phone-bar">
+    {% if shop.address and shop.address.phone_number %}
+        <i class="ph-duotone ph-phone"></i>
+        <a href="tel:{{ shop.address.phone_number.number }}"
+           class="phone-bar__text">
+            {{ shop.address.phone_number.number }}
+        </a>
+    {% endif %}
+</div>
+

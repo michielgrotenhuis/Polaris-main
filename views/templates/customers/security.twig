@@ -1,0 +1,130 @@
+{% extends '/layouts/account.twig' %}
+
+{% block breadcrumb %}
+    <div class="breadcrumb">
+        <a href="{{ routes.root_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link">{{ "common.home" | trans }}</a>
+        <a href="{{ routes.account_security_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link active">{{ "security.title" | trans }}</a>
+    </div>
+{% endblock %}
+
+{% block title %}{{ "security.title" | trans  ~ " - " ~ shop.name }}{% endblock %}
+
+{% block account_heading %}
+    <div class="profile-heading">
+        <h1 class="profile-heading--title">{{ "security.title" | trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block account_body %}
+    <div class="col-xl-9 col-lg-9 col-md-12 offset-xl-1 mobile-order-1">
+        <div class="row gutter-24">
+            <div class="col-xl-5 col-12">
+                {% if success is not empty %}
+                    <div class="alert alert--success m-b-24">{{ success }}</div>
+                {% endif %}
+                {% if message is not empty %}
+                    {% if errors is empty %}
+                        <div class="alert alert--danger m-b-24">{{ message }}</div>
+                    {% endif %}
+                {% endif %}
+                <form id="security_form" action="{{ routes.ajax_account_password_url | preview_mode(preview_token) }}"
+                      method="post">
+                    {{ csrf_input() }}
+                    <input type="hidden" name="preview" value="{{ preview_token }}">
+
+                    <div class="input-wrapper m-b-24">
+                        <input type="password" class="input-field" placeholder="{{ "security.old_password" | trans }}"
+                               name="password">
+                    </div>
+                    <div class="input-wrapper m-b-24">
+                        <input type="password" class="input-field" placeholder="{{ "security.new_password" | trans }}"
+                               name="new_password">
+                    </div>
+                    <div class="input-wrapper m-b-24">
+                        <input type="password" class="input-field"
+                               placeholder="{{ "security.confirm_password" | trans }}"
+                               name="new_password_confirm">
+                    </div>
+                    <button class="btn btn-fluid btn-md btn-dark saveBtn">
+                        {{ "security.save" | trans }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('.saveBtn').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            clearSuccesses();
+            clearErrors();
+            showLoading(true);
+
+            let form = $('#security_form');
+            let url = form.attr('action');
+
+            let data = {
+                password: form.find('[name="password"]').val(),
+                new_password: form.find('[name="new_password"]').val(),
+                new_password_confirm: form.find('[name="new_password_confirm"]').val(),
+                preview: form.find('[name="preview"]').val(),
+                _token: '{{ csrf_token() }}'
+            }
+
+            ajaxRequest(url, 'POST', data, res => {
+                form.find('.has-error').removeClass("has-error")
+
+                form.prev().remove();
+                form.before('<div class="alert alert--success m-b-24">' +
+                    '{{ "security.success_message" | trans }}' +
+                    '</div>');
+
+                showLoading(false);
+            }, err => {
+                showLoading(false);
+                if (err.responseJSON && err.responseJSON.message && !err.responseJSON.errors) {
+                    form.prev().remove();
+                    form.before('<div class="alert alert--danger m-b-24">' + err.responseJSON.message + '</div>');
+                }
+                if (err.responseJSON && err.responseJSON.errors) {
+                    err.responseJSON.errors.map(err => {
+                        let element = form.find('[name="' + err.field + '"]');
+                        loadValidation(element, err.title);
+                    })
+                }
+            });
+        })
+
+        function loadValidation(element, title) {
+            element.parent().addClass('has-error');
+            element.next().remove();
+            element.after('<span class="error-message">' + title + '</span>');
+        }
+
+        function clearErrors() {
+            $('.alert--danger').each(function (i) {
+                $(this).remove();
+            })
+
+            $('.has-error').each(function (i) {
+                $(this).removeClass('has-error');
+            })
+
+            $('.error-message').each(function (i) {
+                $(this).remove();
+            });
+        }
+
+        function clearSuccesses() {
+            $('.alert--success').each(function (i) {
+                $(this).remove();
+            })
+        }
+    </script>
+{% endblock %}

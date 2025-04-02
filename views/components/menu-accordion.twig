@@ -1,0 +1,121 @@
+<style>
+    .{{ className }}-nav {
+        width: 100%;
+        padding: 0 16px;
+    }
+
+    .{{ className }}-menu,
+    .{{ className }}-submenu {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .{{ className }}-menu-item,
+    .{{ className }}-submenu a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 45px;
+        padding: 0 15px 0 0;
+
+        font-size: {{ fontSize ? fontSize : '14px' }};
+    }
+
+    .{{ className }}-menu .{{ className }}-checkbox:not(:checked) ~ .{{ className }}-submenu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-in-out;
+    }
+
+    .{{ className }}-menu-icon {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .{{ className }}-checkbox:checked ~ .{{ className }}-menu-item .{{ className }}-menu-icon {
+        transform: rotate(90deg);
+    }
+
+    .{{ className }}-submenu {
+        margin-left: 20px !important;
+        transition: margin-left 0.3s ease-in-out;
+    }
+
+    .{{ className }}-menu li {
+        min-height: 52px;
+        align-items: center;
+        display: grid;
+        font-size: {{ fontSize ? fontSize : '14px' }};
+        transition: all 0.3s ease-in-out !important;
+    }
+
+    .{{ className }}-menu li:last-child > label {
+        border-bottom: none;
+    }
+
+    .{{ className }}-submenu li:last-child > a {
+        border-bottom: none;
+    }
+
+    .{{ className }}-menu > li:not(:last-child) > .{{ className }}-menu-item,
+    .{{ className }}-submenu > li:not(:last-child) > .{{ className }}-menu-item,
+    .{{ className }}-submenu a:not(:last-child) {
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .{{ className }}-checkbox {
+        display: none;
+    }
+</style>
+
+<nav class="{{ className }}-nav">
+    <ul class="{{ className }}-menu">
+        {% for item in sidebarItems %}
+            {% if item.children | length > 0 %}
+                <li>
+                    <input type="checkbox" id="menu-{{ item.title }}-{{ className }}" class="{{ className }}-checkbox">
+                    <label for="menu-{{ item.title }}-{{ className }}" class="{{ className }}-menu-item header-holder--navigation--link">
+                        {{ item.title }}
+                        <span class="{{ className }}-menu-icon">+</span>
+                    </label>
+                    {{ _self.renderChildMenu(item.children, className) }}
+                </li>
+            {% else %}
+                <li>
+                    <a href="{{ item.url | preview_mode(preview_token) }}"
+                       title="{{ item.title }}"
+                       class="{{ className }}-menu-item header-holder--navigation--link">
+                        {{ item.title }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+
+{% macro renderChildMenu(children, className) %}
+    <ul class="{{ className }}-submenu">
+        {% for child in children %}
+            {% if child.children | length > 0 %}
+                <li>
+                    <input type="checkbox" id="menu-{{ child.title }}-{{ className }}"
+                           class="{{ className }}-checkbox">
+                    <label for="menu-{{ child.title }}-{{ className }}"
+                           class="{{ className }}-menu-item header-holder--navigation--link">
+                        {{ child.title }}
+                        <span class="{{ className }}-menu-icon">+</span>
+                    </label>
+                    {{ _self.renderChildMenu(child.children, className) }}
+                </li>
+            {% else %}
+                <li>
+                    <a href="{{ child.url | preview_mode(preview_token) }}"
+                       title="{{ child.title }}"
+                       class="{{ className }}-menu-item header-holder--navigation--link">
+                        {{ child.title }}
+                    </a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endmacro %}

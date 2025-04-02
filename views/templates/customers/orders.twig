@@ -1,0 +1,81 @@
+{% extends '/layouts/account.twig' %}
+
+{% block breadcrumb %}
+    <div class="breadcrumb">
+        <a href="{{ routes.root_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link">{{ "common.home" | trans }}</a>
+        <a href="{{ routes.account_orders_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link active">{{ "orders.title" | trans }}</a>
+    </div>
+{% endblock %}
+
+{% block title %}{{ "orders.title" | trans  ~ " - " ~ shop.name }}{% endblock %}
+
+{% block account_heading %}
+    <div class="profile-heading">
+        <h1 class="profile-heading--title">{{ "orders.title" | trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block account_body %}
+    <div class="col-xl-9 col-lg-9 col-md-12 offset-xl-1 mobile-order-1">
+        <div class="table-holder">
+            <!-- Begin :: Table Web -->
+            <div class="table-web">
+                <table class="table">
+                    <thead>
+                    <th>{{ "orders.order_number" | trans }}</th>
+                    <th>{{ "orders.date" | trans }}</th>
+                    <th>{{ "orders.payment_status" | trans }}</th>
+                    <th>{{ "orders.fulfillment_status" | trans }}</th>
+                    <th>{{ "orders.total" | trans }}</th>
+                    </thead>
+                    <tbody class="orders">
+                    {% include "/snippets/order-list.twig" | storefront_path with {'orders' : orders} %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- End  :: Table Web -->
+
+            <!-- Begin :: Table Mobile -->
+            <div class="table-mobile">
+                {% include "/snippets/order-list-mobile.twig" | storefront_path with {'orders' : orders} %}
+            </div>
+            <!-- End  :: Table Mobile -->
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        let lastOrderId = 0;
+        let orders_container = $('.orders');
+        let mobil_orders_container = $('.table-mobile');
+        $(window).scroll(function () {
+            if ($(window).scrollTop() === $(document).height() - $(window).height()) {
+                let lastOrder = $('[data-order-id]').last();
+                let latestOrderId = lastOrder.attr('data-order-id');
+                console.log(latestOrderId)
+
+                if (latestOrderId !== lastOrderId) {
+                    lastOrderId = latestOrderId;
+
+                    if (latestOrderId) {
+                        let data = {
+                            limit: 20,
+                            sort: '{{ sort ? sort : "created_at:desc" }}',
+                            starting_after: latestOrderId
+                        }
+
+                        loadOrders(data, res => {
+                            orders_container.append(res.orders);
+                            mobil_orders_container.append(res.mobile_orders);
+                        }, err => {
+                            console.log(err);
+                        })
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

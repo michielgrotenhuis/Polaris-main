@@ -1,0 +1,72 @@
+{% extends '/layouts/theme.twig' %}
+
+{% block body %}
+    <main class="main-root">
+        <div class="wrapper">
+            <div class="page-holder">
+                <div class="breadcrumb">
+                    <a href="{{ routes.root_url | preview_mode(preview_token) }}"
+                       class="breadcrumb-link">{{ "common.home" | trans }}</a>
+                    <a href="#" class="breadcrumb-link active">{{ "cart.title" | trans }}</a>
+                </div>
+                <h1 class="page-header--title">{{ "cart.title" | trans }}</h1>
+                <div class="page-container">
+                    <div class="cart-view-container">
+                        {% include '/snippets/cart.twig' | storefront_path with {'cart' : cart} %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block title %}{{ "cart.title" | trans  ~ " - " ~ shop.name }}{% endblock %}
+
+{% block js %}
+    <script>
+        $(document).on('click', '.cart-list--item--remove', function () {
+            let variantId = $(this).parents('.cart-list--item:eq(0)').attr('data-variant-id');
+            let quantity = 0;
+
+            showLoading(true);
+            decreaseCartItem(variantId, quantity, () => {
+                refreshCartBasket();
+            }, err => {
+                showToast(err.responseJSON.message)
+                showLoading(false);
+            })
+        })
+
+        $(document).on('click', '.cart-list--item--quantity .decrease', function () {
+            let variantId = $(this).parents('.cart-list--item:eq(0)').attr('data-variant-id');
+            let quantityInput = $(this).parents('.cart-list--item:eq(0)').find('.quantity-amount');
+            let quantity = parseInt(quantityInput.val());
+
+            showLoading(true);
+            decreaseCartItem(variantId, quantity - 1, () => {
+                refreshCartBasket();
+                quantityInput.val(quantity - 1)
+            }, err => {
+                quantityInput.val(quantity)
+                showToast(err.responseJSON.message)
+                showLoading(false);
+            })
+        })
+
+        $(document).on('click', '.cart-list--item--quantity .increase', function () {
+            let variantId = $(this).parents('.cart-list--item:eq(0)').attr('data-variant-id');
+            let quantityInput = $(this).parents('.cart-list--item:eq(0)').find('.quantity-amount');
+            let quantity = parseInt(quantityInput.val());
+
+            showLoading(true);
+            increaseCartItem(variantId, quantity + 1, () => {
+                refreshCartBasket();
+                quantityInput.val(quantity + 1)
+            }, err => {
+                quantityInput.val(quantity)
+                showToast(err.responseJSON.message)
+                showLoading(false);
+            })
+        })
+    </script>
+{% endblock %}

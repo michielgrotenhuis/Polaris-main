@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name='robots' content='index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'/>
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block seo_tags %}{% endblock %}
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ shop.name }}"/>
+    <meta property="og:image:width" content="1600"/>
+    <meta property="og:image:height" content="900"/>
+    <meta property="og:image:type" content="image/jpeg"/>
+
+    <meta name="author" content="{{ shop.name }}"/>
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:creator" content="{{ shop.name }}"/>
+    <meta name="twitter:site" content="{{ canonical_url }}"/>
+
+    <link rel="apple-touch-icon" sizes="180x180"
+          href="{{ shop.favicon is not empty ? shop.favicon.src : "/images/favicon/apple-icon-180x180.png" | asset }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="{{ shop.favicon is not empty ? shop.favicon.src : "/images/favicon/favicon-32x32.png" | asset }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="{{ shop.favicon is not empty ? shop.favicon.src : "/images/favicon/favicon-16x16.png" | asset }}">
+    <link rel="manifest" href="{{ "/images/favicon/manifest.json" | asset }}">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="theme-color" content="#000000">
+
+    <link rel="stylesheet" href="{{ "/styles/main.min.css" | asset }}?v={{ "version" | theme_config }}">
+
+    {% set selectedFontData = "fonts.primary_font" | setting_data_from_option %}
+
+    {% if selectedFontData and selectedFontData.is_google %}
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link href="https://fonts.googleapis.com/css2?family={{ selectedFontData.id }}:wght@100;200;300;400;500;600;700&display=swap"
+              rel="stylesheet"/>
+    {% elseif selectedFontData and selectedFontData.link %}
+        <link href="{{ selectedFontData.link }}" rel="stylesheet"/>
+    {% else %}
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap"
+              rel="stylesheet"/>
+    {% endif %}
+
+    <link rel="stylesheet" href="{{ "/scripts/libs/jquery-modal/jquery.modal.min.css" | asset }}">
+    <link rel="stylesheet" href="{{ "/scripts/libs/jquery-toast/jquery.toast.min.css" | asset }}">
+
+    <script src="https://unpkg.com/phosphor-icons"></script>
+
+    <style>
+        #loader {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: #4c4c4c5c;
+            justify-content: center;
+            align-items: center;
+
+            display: none;
+        }
+
+        #loader img {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .blocker {
+            z-index: 999 !important;
+        }
+
+        .modal {
+            vertical-align: unset !important;
+        }
+    </style>
+
+    {% include '/layouts/color.twig' | storefront_path %}
+
+    {% block css %}{% endblock %}
+
+    {% for script in scripts %}
+        {{ script | raw }}
+    {% endfor %}
+
+    <style>
+        html, body, h1, p, a, span {
+            font-family: "{{ "fonts.primary_font" | setting }}", sans-serif !important;
+        }
+
+        .base-font {
+            font-family: "{{ "fonts.primary_font" | setting }}", sans-serif !important;
+        }
+    </style>
+
+
+    {{ "settings.custom_code_for_header" | setting | raw }}
+</head>
+
+<body>
+
+{{ "settings.custom_code_for_body" | setting | raw }}
+
+{% include '/sections/header.twig' | storefront_path %}
+
+<!-- Begin :: Main Root -->
+{% block body %}{% endblock %}
+
+{% block modal %}{% endblock %}
+
+<script>
+    function showLoading(status = false) {
+        if (status) {
+            $('.preloader').css('display', 'flex');
+        } else {
+            $('.preloader').hide();
+        }
+    }
+
+    function ajaxRequest(url, type, data, successCallback, errorCallback) {
+        $.ajax({
+            'url': url,
+            'type': type,
+            'data': data,
+            'success': function (data) {
+                successCallback(data);
+            },
+            'error': function (request, error) {
+                errorCallback(request, error);
+            }
+        });
+    }
+</script>
+
+{% include '/sections/footer.twig' | storefront_path %}
+
+<div class="preloader" style="display: none">
+    <span class="preloader-spinner"></span>
+</div>
+
+{% block js %}{% endblock %}
+</body>
+
+{{ "settings.custom_code_for_footer" | setting | raw }}
+</html>

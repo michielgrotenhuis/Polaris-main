@@ -1,0 +1,24 @@
+<a href="{{ routes.root_url | preview_mode(preview_token) }}" class="header-holder--logo" title="{{ shop.name }}">
+    {% if shop.logo is not null %}
+        <img src="{{ shop.logo ? shop.logo.src : '/images/logo/logo.svg' | asset }}"
+             class="w-100 h-100 object-fit-cover"
+             style="{% if "home.logo_width" | setting | length > 0 %}width: {{ "home.logo_width" | setting }}px !important;{% endif %}
+                     {% if "home.logo_height" | setting | length > 0 %}height: {{ "home.logo_height" | setting }}px !important;{% endif %}"
+             alt="{{ shop.name }}">
+    {% else %}
+        <span class="logo--text">
+            {% set myString = shop.name %}
+            {% if myString|length > 20 %}
+                {{ myString|slice(0, 20) ~ '...' }}
+            {% else %}
+                {{ myString }}
+            {% endif %}
+        </span>
+    {% endif %}
+</a>
+
+<style>
+    .logo--text {
+        font-size: 100% !important;
+    }
+</style>

@@ -1,0 +1,238 @@
+{% extends '/layouts/account.twig' %}
+
+{% block breadcrumb %}
+    <div class="breadcrumb">
+        <a href="{{ routes.root_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link">{{ "common.home" | trans }}</a>
+        <a href="{{ routes.account_addresses_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link">{{ "addresses.title" | trans }}</a>
+        <a href="{{ routes.account_addresses_create_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link active">{{ "address.edit_title" | trans }}</a>
+    </div>
+{% endblock %}
+
+{% block account_heading %}
+    <div class="profile-heading">
+        <h1 class="profile-heading--title">{{ "address.edit_title" | trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block account_body %}
+    <div class="col-xl-9 col-lg-9 col-md-12 offset-xl-1 mobile-order-1">
+        <form action="{{ routes.ajax_account_addresses_edit_url | preview_mode(preview_token) | route("i:aid",address.id) }}"
+              method="post">
+            {{ csrf_input() }}
+            <input type="hidden" name="preview" value="{{ preview_token }}">
+
+            <div class="row gutter-24">
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.first_name" | trans }}"
+                               name="first_name"
+                               value="{{ address.first_name }}">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.last_name" | trans }}"
+                               name="last_name"
+                               value="{{ address.last_name }}">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.addr1" | trans }}"
+                               name="address1"
+                               value="{{ address.street.address1 }}">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.addr2" | trans }}"
+                               name="address2"
+                               value="{{ address.street.address2 }}">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.company" | trans }}"
+                               name="company_name"
+                               value="{{ address.company_name }}">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.zip" | trans }}"
+                               name="zip_code"
+                               value="{{ address.zip }}">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <select class="country_select input-field" name="country">
+                            <option disabled selected>{{ "address.country" | trans }}</option>
+                        </select>
+                        <span class="input-icon ph-chevron-down"></span>
+                    </div>
+                </div>
+                <div class="state_select_container col-xl-5 col-lg-6" style="display: none">
+                    <div class="input-wrapper m-b-24">
+                        <select class="state_select input-field" name="state">
+                            <option disabled selected>{{ "address.state" | trans }}</option>
+                        </select>
+                        <span class="input-icon ph-chevron-down"></span>
+                    </div>
+                </div>
+                <div class="city_container col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.city" | trans }}"
+                               name="city" {{ address.city }}>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.phone" | trans }}"
+                               name="phone_number"
+                               value="{{ address.phone_number.number }}">
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col m-b-24">
+                <label for="1" class="checkbox">
+                    <input type="checkbox" name="is_default_imt" id="1" value="{{ address.is_default }}">
+                    <span class="checkbox-control"></span>
+                    <span class="checkbox-label">{{ "address.set_default" | trans }}</span>
+                </label>
+            </div>
+
+            <input type="hidden" name="is_default" value="{{ address.is_default }}">
+
+            <button class="btn btn-md btn-dark save_address">{{ "address.save" | trans }}</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        loadCountries();
+
+        if (parseInt('{{ address.is_default }}') > 0) {
+            $('.checkbox').click();
+        }
+
+        function loadCountries() {
+            ajaxRequest('{{ routes.data_countries_url | preview_mode(preview_token) }}', 'GET', null, res => {
+                let country_element = $('.country_select');
+                country_element.html('');
+
+                let country_options = "<option disabled selected>{{ "address.country" | trans }}</option>";
+                res.map(country => {
+                    country_options += "<option value='" + country.alpha2 + "'>" + country.localName + "</option>"
+                })
+
+                country_element.html(country_options);
+
+                country_element.val('{{ address.country.alpha2 }}').change();
+            }, err => {
+                console.log(err);
+            })
+        }
+
+        function loadProvinces(country_code) {
+            let url = '{{ routes.data_provinces_url | preview_mode(preview_token) }}'.replace('s:code', country_code);
+
+            ajaxRequest(url, 'GET', null, res => {
+                let state_element = $('.state_select');
+                state_element.html('');
+
+                let state_options = "<option disabled selected>{{ "address.state" | trans }}</option>";
+
+                if (res.length > 0) {
+                    $('.state_select_container').show();
+                } else {
+                    $('.state_select_container').hide();
+                }
+
+                res.map(state => {
+                    state_options += "<option value='" + state.code + "'>" + state.localName + "</option>"
+                })
+
+                state_element.html(state_options);
+
+                if ('{{ address.province.code }}' != null && '{{ address.province.code }}' !== '') {
+                    state_element.val('{{ address.province.code }}').change();
+                }
+
+            }, err => {
+                console.log(err);
+            })
+        }
+
+        $('.country_select').on('change', function () {
+            let country_code = $(this).val();
+
+            loadProvinces(country_code);
+        })
+
+        $('.save_address').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let isDefault = $('input[name="is_default_imt"]').is(':checked') ? 1 : 0;
+
+            $('input[name="is_default"]').val(isDefault);
+
+            clearSuccesses();
+            clearErrors();
+            showLoading(true);
+
+            let form = $(this).parents('form:eq(0)');
+
+            let url = form.attr('action');
+
+            ajaxRequest(url, 'PUT', form.serialize(), res => {
+                showLoading(false);
+
+                form.prev().remove();
+                form.before('<div class="alert alert--success m-b-24">{{ "address.update.success" | trans }}</div>');
+            }, err => {
+                showLoading(false);
+                if (err.responseJSON && err.responseJSON.errors) {
+                    err.responseJSON.errors.map(err => {
+                        if (err.field === "country") {
+                            let element = $('[name="country"]')
+                            loadValidation(element, err.title);
+                        } else if (err.field === "phone_number") {
+                            let element = $('[name="phone_number"]')
+                            loadValidation(element, err.title);
+                        }
+                    })
+                }
+            });
+        })
+
+        function loadValidation(element, title) {
+            element.parent().addClass('has-error');
+            element.next().remove();
+            element.after('<span class="error-message">' + title + '</span>');
+        }
+
+        function clearErrors() {
+            $('.has-error').each(function (i) {
+                $(this).removeClass('has-error');
+            })
+
+            $('.error-message').each(function (i) {
+                $(this).remove();
+            });
+        }
+
+        function clearSuccesses() {
+            $('.alert--success').each(function (i) {
+                $(this).remove();
+            })
+        }
+    </script>
+{% endblock %}
+
+{% block title %}{{ "address.title" | trans  ~ " - " ~ shop.name }}{% endblock %}

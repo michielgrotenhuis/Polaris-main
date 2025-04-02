@@ -1,0 +1,84 @@
+<style>
+    .navigation-container {
+        background-color: #fff;
+        color: #000;
+
+        border-bottom: 1px solid #F2F2F2;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 100%;
+    }
+
+    .navigation {
+        position: relative;
+        z-index: 9999999 !important;
+        height: 38px;
+
+        display: flex;
+    }
+
+    .navigation .menu > li > a {
+        color: #000 !important;
+        font-size: 12px;
+    }
+
+    .navigation .menu span {
+        font-size: 12px;
+    }
+
+    .navigation .menu > li > a:hover {
+        color: #000 !important;
+    }
+
+    .navigation-container .phone-bar {
+        display: flex;
+        align-items: center;
+    }
+
+    .navigation-container .phone-bar i {
+        margin-top: 2px;
+    }
+
+    .navigation-container .phone-bar__text {
+        margin-left: 4px;
+
+        font-weight: 500;
+        line-height: 1.5;
+
+        text-decoration: none;
+        color: #000;
+        font-size: 12px;
+    }
+
+
+    @media (max-width: 767px) {
+        .navigation-container {
+            display: none;
+        }
+    }
+</style>
+
+<div class="navigation-container">
+    <div class="wrapper">
+        <div class="navbar">
+            <nav class="navigation">
+                <!-- Start Menu Desktop Navigation -->
+                {% include "/components/menu.twig" | storefront_path with {'items' : menus.header} %}
+                <!-- End Menu Desktop Navigation -->
+            </nav>
+            {% if shop.address and shop.address.phone_number and shop.address.phone_number.number %}
+                <div class="phone-bar">
+                    <i class="ph-duotone ph-phone"></i>
+                    <a href="tel:{{ shop.address.phone_number.number }}"
+                       class="phone-bar__text">
+                        {{ shop.address.phone_number.number }}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

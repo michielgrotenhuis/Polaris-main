@@ -1,0 +1,227 @@
+<style>
+    .header {
+        border-bottom: 0;
+    }
+
+    .header-holder--action .search-open {
+        display: none;
+    }
+
+    .drawer-menu-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        min-height: 100vh;
+        background-color: #00000091;
+        z-index: 9999999;
+        display: none;
+    }
+
+    .drawer-menu-container.active {
+        display: block;
+    }
+
+    .drawer-menu-container .content {
+        width: 100%;
+        position: relative;
+        top: 25px;
+    }
+
+    .show-welcome-store-banner .drawer-menu-container .content {
+        top: 65px;
+    }
+
+    .drawer-menu-container .drawer-menu {
+        list-style: none;
+        padding: 0;
+        margin: calc(10% - 8px) 0 0;
+        width: 267px;
+        background: white;
+        box-shadow: 0 0 1px 1px #ededed;
+        overflow-y: auto;
+        height: 100%;
+        max-height: 600px;
+        min-height: 598px;
+    }
+
+    .drawer-menu-container .drawer-menu > li {
+        padding: 12px 16px;
+    }
+
+    .drawer-menu-container .drawer-menu > li > a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 24px;
+    }
+
+    .drawer-menu-container .drawer-menu > li:hover {
+        background-color: #f5f5f5;
+    }
+
+    .sub-drawer-menu {
+        position: absolute;
+        top: -1px;
+        left: 268px;
+        background-color: #f5f5f5;
+        width: 100%;
+        padding: 30px;
+        min-height: 600px;
+        height: 100%;
+        max-width: calc(100% - 268px);
+        display: none;
+    }
+
+    .sub-drawer-menu > ul {
+        display: grid;
+        grid-gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        list-style: none;
+        width: 100%;
+        padding: 0 20px 0 40px;
+        margin: 0;
+        gap: 30px;
+    }
+
+    .sub-drawer-menu > ul > li > a {
+        color: #232d40;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 24px;
+        text-decoration: none;
+    }
+
+    .sub-drawer-menu > ul > li > a:hover {
+        color: #000000;
+    }
+
+    .child-menu {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0 0;
+        gap: 4px;
+        display: grid;
+    }
+
+    .child-menu li a {
+        font-size: 14px;
+        font-weight: 400;
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .child-menu li a:hover {
+        text-decoration: underline;
+    }
+
+    .drawer-menu-container .drawer-menu > li:hover .sub-drawer-menu {
+        display: block;
+    }
+
+    @media (max-width: 1210px) {
+        .drawer-menu-container .content {
+            top: 35px;
+        }
+
+        .show-welcome-store-banner .drawer-menu-container .content {
+            top: 70px;
+        }
+    }
+
+    @media (max-width: 1150px) {
+        .drawer-menu-container .content {
+            top: 45px;
+        }
+
+        .show-welcome-store-banner .drawer-menu-container .content {
+            top: 75px;
+        }
+    }
+
+    @media (max-width: 1050px) {
+        .drawer-menu-container .content {
+            top: 30px;
+        }
+
+        .show-welcome-store-banner .drawer-menu-container .content {
+            top: 78px;
+        }
+    }
+
+    @media (max-width: 950px) {
+        .drawer-menu-container .content {
+            top: 40px;
+        }
+
+        .show-welcome-store-banner .drawer-menu-container .content {
+            top: 85px;
+        }
+    }
+
+    @media (max-width: 850px) {
+        .drawer-menu-container .content {
+            top: 50px;
+        }
+
+        .show-welcome-store-banner .drawer-menu-container .content {
+            top: 95px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header-holder--action .search-open {
+            display: block;
+        }
+    }
+</style>
+
+<div class="drawer-menu-container">
+    <div class="wrapper">
+        <div class="content">
+            <ul class="drawer-menu">
+                {% for item in items %}
+                    <li class="drawer-menu-item">
+                        <a class="header-holder--navigation--link menu-title"
+                           href="{{ item.url | preview_mode(preview_token) }}" title="{{ item.title }}">
+                        <span>
+                            {{ item.title }}
+                        </span>
+                            <i class="ph ph-caret-right"></i>
+                        </a>
+
+                        {% if item.children | length > 0 %}
+                            <div class="sub-drawer-menu">
+                                <ul>
+                                    {% for child in item.children %}
+                                        <li>
+                                            <a href="{{ child.url | preview_mode(preview_token) }}"
+                                               title="{{ child.title }}">
+                                                {{ child.title }}
+                                            </a>
+
+                                            <ul class="child-menu">
+                                                {% for subChild in child.children %}
+                                                    <li>
+                                                        <a href="{{ subChild.url | preview_mode(preview_token) }}"
+                                                           title="{{ subChild.title }}">
+                                                            {{ subChild.title }}
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>

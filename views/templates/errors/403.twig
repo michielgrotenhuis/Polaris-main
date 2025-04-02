@@ -1,0 +1,15 @@
+{% extends '/layouts/theme.twig' %}
+
+{% block body %}
+    <main class="main-root">
+        <div class="wrapper">
+            <div class="status-message--container">
+                <div class="status-message">
+                    <h2 class="status-message--title">{{ "errors.403.title" | trans }}</h2>
+                    <p class="status-message--subtitle">{{ "errors.403.description" | trans }}
+                        {{ "errors.403.back" | trans(["click_link" => '<a href="{{ routes.root_url | preview_mode(preview_token) }}" class="link link--primary">Click here </a>']) }} to back to home.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

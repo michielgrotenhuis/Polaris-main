@@ -1,0 +1,109 @@
+<div class="basket-container--body">
+    {% if cart.items | length > 0 %}
+        <div class="basket-container--content">
+            <div class="basket-product--list">
+                {% for item in cart.items %}
+                    <div class="basket-product--item" data-basket-variant-id="{{ item.variant.id }}">
+                        <div class="basket-product--item--image">
+                            <img src="{{ item.variant and item.variant.image
+                            ? item.variant.image.src
+                            : (item.product.images | length > 0
+                            ? item.product.images[0].src
+                            : "/images/product.png" | asset) }}"
+                                 alt="{{ item.product.title }}">
+                        </div>
+
+                        <div class="basket-product--item--content">
+                            <p class="basket-product--item--content--title">
+                                {{ item.product.title }}
+                            </p>
+                            <div class="basket-product--item--variant--list">
+                                {% for option in item.variant.option_values %}
+                                    <span class="basket-product--item--variant--item">
+                                    {{ option.option }}: {{ option.name }}
+                                        {{ loop.last ? '' : ',&nbsp;' }}
+                                </span>
+                                {% endfor %}
+                            </div>
+                            <div class="basket-product--item--quantity--price">
+                                <div class="cart-list--item--quantity quantity-container">
+                                    <span class="cart-list--item--quantity--btn basket-decrease ph-minus"></span>
+                                    <input type="number"
+                                           class="cart-list--item--quantity--input input-field text-center quantity-amount"
+                                           value="{{ item.quantity }}" readonly/>
+                                    <span class="cart-list--item--quantity--btn basket-increase ph-plus"></span>
+                                </div>
+                                <div class="basket-product--item--price--delete">
+                                    <div class="basket-product--item--price">
+                                        {% if item.variant.sale_price is not empty %}
+                                            <span class="basket-product--item--price--amount">{{ filter.money(item.variant.sale_price, cart.currency.code) }}</span>
+                                            <del class="basket-product--item--sale-price--amount">{{ filter.money(item.variant.price, cart.currency.code) }}</del>
+                                        {% else %}
+                                            <span class="basket-product--item--price--amount">{{ filter.money(item.variant.price, cart.currency.code) }}</span>
+                                        {% endif %}
+
+                                    </div>
+                                    <button class="ph ph-trash delete-btn basket-drawer-item-delete-btn"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="basket-container--empty">
+            <p class="basket-container--empty--title">
+                {{ "cart.empty.title" | trans }}
+            </p>
+            <p class="basket-container--empty--description">
+                {{ "cart.empty.text" | trans }}
+            </p>
+            <a href="{{ routes.all_products_url | preview_mode(preview_token) }}"
+               class="basket-container--empty--btn">
+                {{ "cart.continue_shopping" | trans }}
+            </a>
+        </div>
+    {% endif %}
+
+    {% if cart.items | length > 0 %}
+        <div class="basket-container--footer">
+            <div class="basket-container--checkout">
+                {% if cart.original_total_price > cart.subtotal_price %}
+                    <div class="basket-container--checkout--subtotal">
+                    <span class="basket-container--checkout--subtotal--title">
+                         {{ "cart.sub_total" | trans }}
+                    </span>
+                        <span class="basket-container--checkout--subtotal--amount">
+                        {{ filter.money(cart.original_total_price, cart.currency.code) }}
+                    </span>
+                    </div>
+                    <div class="basket-container--checkout--subtotal">
+                    <span class="basket-container--checkout--subtotal--title">
+                         {{ "cart.discount" | trans }}
+                    </span>
+                        <span class="basket-container--checkout--discount--amount">
+                        - {{ filter.money(cart.original_total_price - cart.subtotal_price, cart.currency.code) }}
+                    </span>
+                    </div>
+                {% endif %}
+                <div class="basket-container--checkout--total">
+                    <span class="basket-container--checkout--total--title"> {{ "cart.total" | trans }}</span>
+                    <span class="basket-container--checkout--total--amount">
+                    {{ filter.money(cart.subtotal_price, cart.currency.code) }}
+                </span>
+                </div>
+
+                <a href="{{ routes.checkout_read | preview_mode(preview_token) | route("*:token",cart.token) }}"
+                   class="basket-container--checkout--btn">
+                    {{ "cart.checkout" | trans }}
+                </a>
+            </div>
+
+            <a href="{{ routes.cart_url | preview_mode(preview_token) }}" class="view-cart--link">
+                {{ "cart.view" | trans }}
+            </a>
+        </div>
+    {% endif %}
+</div>
+

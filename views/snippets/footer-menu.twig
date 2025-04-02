@@ -1,0 +1,44 @@
+{% if menu.legals | length > 0 %}
+    <div class="footer-policy--column">
+        <h6 class="footer-column--title">{{ "footer.legals.text" | trans }}</h6>
+        {% for item in menu.legals %}
+            <span class="footer-column--navigation--item">
+                <a href="{{ item.url | preview_mode(preview_token) }}"
+                   title="{{ item.title }}"
+                   class="footer-column--link">
+                    {{ item.title }}
+                </a>
+            </span>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if menu.company | length > 0 %}
+    <div class="footer-company--column">
+        <h6 class="footer-column--title">{{ "footer.company.text" | trans }}</h6>
+        {% for item in menu.company %}
+            <span class="footer-column--navigation--item">
+                <a href="{{ item.url | preview_mode(preview_token) }}"
+                   title="{{ item.title }}"
+                   class="footer-column--link">
+                    {{ item.title }}
+                </a>
+            </span>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if menu.links | length > 0 %}
+    <div class="footer-company--column">
+        <h6 class="footer-column--title">{{ "footer.links.text" | trans }}</h6>
+        {% for item in menu.links %}
+            <span class="footer-column--navigation--item">
+                <a href="{{ item.url | preview_mode(preview_token) }}"
+                   title="{{ item.title }}"
+                   class="footer-column--link">
+                    {{ item.title }}
+                </a>
+            </span>
+        {% endfor %}
+    </div>
+{% endif %}

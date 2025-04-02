@@ -1,0 +1,92 @@
+<ul class="menu">
+    {% for item in items %}
+        {% include "/components/menu-item.twig" | storefront_path with {'item' : item} %}
+    {% endfor %}
+</ul>
+
+<style>
+    .menu {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+    .menu, .submenu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .first-submenu {
+        border-top: 24px solid transparent;
+        margin-left: -10px;
+    }
+
+    .menu > li {
+        position: relative;
+        display: inline-block;
+    }
+
+    .menu > li > a {
+        align-items: center;
+        display: flex;
+        gap: 4px;
+    }
+
+    .submenu {
+        display: none;
+        position: absolute;
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.04);
+    }
+
+    .submenu li {
+        min-width: 200px;
+        min-height: 48px;
+        height: auto;
+        background: white;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .submenu > li > a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .submenu li:hover {
+        background-color: #f9f9f9;
+        border-left: 1px solid #eaeaea;
+        cursor: pointer;
+    }
+
+    .submenu .submenu {
+        left: 100%;
+        top: 0;
+    }
+
+    .menu li:hover > .submenu {
+        display: block;
+    }
+
+    .underline-link {
+        position: relative;
+        text-decoration: none;
+        color: #000;
+    }
+
+    .underline-link:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 1px;
+        background: #000;
+        transition: width .3s;
+        bottom: 0;
+        left: 0;
+    }
+
+    .underline-link:hover:after {
+        width: 100%;
+    }
+
+</style>

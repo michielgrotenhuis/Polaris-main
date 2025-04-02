@@ -1,0 +1,165 @@
+{% extends '/layouts/theme.twig' %}
+
+{% block css %}
+    <style>
+        .password-input {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            cursor: pointer;
+            right: 5px;
+            top: 20px;
+        }
+
+        .toggle-password:before {
+            content: '';
+            position: inherit;
+            top: 50%;
+            right: 0;
+            width: 35px;
+            height: 35px;
+            background: url("{{ '/images/template/bg/hide-password.png' | asset }}") no-repeat center center;
+            transform: translateY(-50%);
+            background-size: 20px;
+        }
+
+        .toggle-password.active:before {
+            background: url("{{ '/images/template/bg/show-password.png' | asset }}") no-repeat center center;
+            background-size: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <main class="main-root">
+        <div class="wrapper">
+            <div class="auth-container">
+                {% if message is not empty %}
+                    <div class="alert alert--danger m-b-24">{{ message }}</div>
+                {% endif %}
+                <div class="auth-holder">
+                    <h2 class="auth-holder--heading">{{ "login.title" | trans }}</h2>
+                    <div class="auth-holder--form">
+                        <form action="{{ routes.ajax_account_login_url | preview_mode(preview_token) }}" method="post">
+                            {{ csrf_input() }}
+                            <input type="hidden" name="preview" value="{{ preview_token }}">
+
+                            <div class="input-wrapper m-b-24">
+                                <input type="email" class="input-field" placeholder="{{ "login.email" | trans }}"
+                                       name="email">
+                            </div>
+                            <div class="input-wrapper m-b-8">
+                                <div class="password-input">
+                                    <input type="password" class="input-field"
+                                           placeholder="{{ "login.password" | trans }}" name="password">
+                                    <span class="toggle-password"></span>
+                                </div>
+                            </div>
+                            <a href="{{ routes.account_forgot_url | preview_mode(preview_token) }}"
+                               class="link link--primary fs-14">
+                                {{ "login.forgot_password.text" | trans }}
+                            </a>
+                            <button class="btn btn-fluid btn-md btn-dark m-t-24 loginBtn">
+                                {{ "login.submit" | trans }}
+                            </button>
+                        </form>
+                    </div>
+                    <div class="auth-holder--footer">{{ "login.new_customer.text" | trans }} <a
+                                href="{{ routes.account_register_url | preview_mode(preview_token) }}"
+                                class="link link--primary">
+                            {{ "login.create_account" | trans }}
+                        </a></div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block title %}{{ "login.title" | trans  ~ " - " ~ shop.name }}{% endblock %}
+
+{% block js %}
+    <script>
+        $('.toggle-password').on('click', function () {
+            $(this).toggleClass('active');
+            let input = $('input[name="password"]');
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+            } else {
+                input.attr('type', 'password');
+            }
+        });
+
+
+        $('.loginBtn').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            clearSuccesses();
+            clearErrors();
+            showLoading(true);
+
+            let form = $(this).parents('form:eq(0)');
+            let url = form.attr('action');
+
+            let data = {
+                email: form.find('[name="email"]').val(),
+                password: form.find('[name="password"]').val(),
+                preview: form.find('[name="preview"]').val(),
+                _token: '{{ csrf_token() }}'
+            }
+
+            ajaxRequest(url, 'POST', data, res => {
+                window.location.href = res.redirect + '?preview={{ preview_token }}';
+
+                $('form').find('.has-error').removeClass("has-error")
+
+                form.prev().remove();
+            }, err => {
+                showLoading(false);
+                if (err.responseJSON && err.responseJSON.message && !err.responseJSON.errors) {
+                    form.prev().remove();
+                    form.before('<div class="alert alert--danger m-b-24">' + err.responseJSON.message + '</div>');
+                }
+                if (err.responseJSON && err.responseJSON.errors) {
+                    err.responseJSON.errors.map(err => {
+                        if (err.field === "email") {
+                            let element = $('[name="email"]')
+                            loadValidation(element, err.title);
+                        } else if (err.field === "password") {
+                            let element = $('[name="password"]')
+                            loadValidation(element, err.title);
+                        }
+                    })
+                }
+            });
+        })
+
+        function loadValidation(element, title) {
+            element.parent().addClass('has-error');
+            element.next().remove();
+            element.after('<span class="error-message">' + title + '</span>');
+        }
+
+        function clearErrors() {
+            $('.alert--danger').each(function (i) {
+                $(this).remove();
+            })
+
+            $('.has-error').each(function (i) {
+                $(this).removeClass('has-error');
+            })
+
+            $('.error-message').each(function (i) {
+                $(this).remove();
+            });
+        }
+
+        function clearSuccesses() {
+            $('.alert--success').each(function (i) {
+                $(this).remove();
+            })
+        }
+    </script>
+{% endblock %}

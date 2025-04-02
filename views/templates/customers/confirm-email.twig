@@ -1,0 +1,69 @@
+{% extends '/layouts/theme.twig' %}
+
+{% block body %}
+    <main class="main-root">
+        <div class="wrapper">
+            <div class="auth-container">
+                <div class="auth-holder confirm-auth-holder">
+                    <h2 class="auth-holder--heading">{{ "confirm_email.title" | trans }}</h2>
+                    <input type="hidden" name="preview" value="{{ preview_token }}">
+
+                    {{ csrf_input() }}
+                    <input type="hidden" name="email"
+                           value="{{ email ? email : (customer ? customer.email : '') }}">
+                    <p>
+                        {{ "confirm_email.description" | trans }}
+                    </p>
+                    <a href="javascript:void(0)"
+                       class="link link--primary text-decoration-underline fs-14 resend_code_btn">{{ "confirm_email.resend" | trans }}</a>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('.resend_code_btn').on('click', function () {
+
+            let form = $('.confirm-auth-holder');
+
+            let email = form.find('input[name="email"]').val();
+
+            showLoading(true);
+
+            ajaxRequest('{{ routes.ajax_account_resend_email_url | preview_mode(preview_token) }}', 'POST', {
+                '_token': '{{ csrf_token() }}',
+                'email': email
+            }, () => {
+                showLoading(false);
+
+                $('.alert--success').each(function (i) {
+                    $(this).remove();
+                })
+
+                $('.alert--danger').each(function (i) {
+                    $(this).remove();
+                })
+
+                form.prev().remove();
+                form.before('<div class="alert alert--success m-b-24">Verification code resent</div>');
+            }, err => {
+                showLoading(false);
+
+                $('.alert--success').each(function (i) {
+                    $(this).remove();
+                })
+
+                $('.alert--danger').each(function (i) {
+                    $(this).remove();
+                })
+
+                form.prev().remove();
+                form.before('<div class="alert alert--danger m-b-24">' + err.responseJSON.message + '</div>');
+            });
+        })
+    </script>
+{% endblock %}
+
+{% block title %}{{ "confirm_email.title" | trans  ~ " - " ~ shop.name }}{% endblock %}

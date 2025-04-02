@@ -1,0 +1,4 @@
+{% for product in products %}
+    {% include "/snippets/product-list-item-grid.twig" | storefront_path with {'product' : product} %}
+{% endfor %}
+

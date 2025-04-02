@@ -1,0 +1,17 @@
+{% for collection in collections %}
+    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-12">
+        <div class="collection-card collection-card-space">
+            <div class="collection-card-holder">
+                <div class="collection-card-img">
+                    <img src="{{ collection.image_url }}"
+                         class="w-100 h-100 object-fit-cover" alt="{{ collection.title }}">
+                </div>
+                <a href="{{ routes.collection_url | preview_mode(preview_token) | route("s:slug",collection.handle) }}"
+                   class="collection-card-action btn-white btn btn-md letter-spacing-4" title="{{ collection.title }}">
+                    {{ collection.title }}
+                    <span class="btn-icon ph-arrow-right"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endfor %}

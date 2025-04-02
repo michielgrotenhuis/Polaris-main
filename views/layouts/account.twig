@@ -1,0 +1,48 @@
+{% extends '/layouts/theme.twig' %}
+
+{% block body %}
+    <main class="main-root">
+        <div class="wrapper">
+            <div class="page-holder">
+                {% block breadcrumb %}{% endblock %}
+                {% block account_heading %}{% endblock %}
+                <div class="profile-container">
+                    <div class="row gutter-24">
+                        <div class="col-xl-2 col-lg-3 col-md-12 mobile-order-2">
+                            <div class="profile-aside">
+                                <ul class="profile-aside--list">
+                                    <li class="profile-aside--list--item">
+                                        <a href="{{ routes.account_url | preview_mode(preview_token) }}" class="profile-aside--link">{{ "account.title" | trans }}</a>
+                                    </li>
+                                    <li class="profile-aside--list--item">
+                                        <a href="{{ routes.account_password_url | preview_mode(preview_token) }}"
+                                           class="profile-aside--link">{{ "security.title" | trans }}</a>
+                                    </li>
+                                    <li class="profile-aside--list--item address_count">
+                                        <a href="{{ routes.account_addresses_url | preview_mode(preview_token) }}" class="profile-aside--link">{{ "addresses.title" | trans }} (<span>{{ customer.addresses_count }}</span>)</a>
+                                    </li>
+                                    <li class="profile-aside--list--item">
+                                        <a href="{{ routes.account_orders_url | preview_mode(preview_token) }}" class="profile-aside--link">{{ "orders.title" | trans }} ({{ customer.orders_count }})</a>
+                                    </li>
+                                </ul>
+                                <div class="profile-aside--action">
+                                    <form action="{{ routes.account_logout_url | preview_mode(preview_token) }}" method="post">
+                                        <input type="hidden" name="preview" value="{{ preview_token }}">
+
+                                        {{ csrf_input() }}
+                                        <button type="submit"
+                                                class="btn btn-width-md btn-mobile-full btn-outline-md btn-outline btn-outline-primary">
+                                           {{ "common.logout" | trans }}
+                                        </button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                        {% block account_body %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

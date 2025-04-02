@@ -1,0 +1,519 @@
+<!-- Begin :: Footer -->
+<footer class="footer">
+    <div class="footer-main">
+        <div class="wrapper">
+            <div class="footer-main--holder">
+                <div class="footer-main--column">
+                    {% include "/components/logo.twig" | storefront_path %}
+                    {% if shop.about is not null %}
+                        <p class="footer-column--slogan">
+                            {{ shop.about }}
+                        </p>
+                    {% endif %}
+                    {% include '/snippets/footer-social-list.twig' | storefront_path %}
+                </div>
+
+
+                {% include '/snippets/footer-menu.twig' | storefront_path with {'menu' : menus.footer} %}
+                {% include '/snippets/footer-mobile-menu.twig' | storefront_path with {'menu' : menus.footer} %}
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="wrapper">
+            <div class="footer-bottom--holder">
+                {% include '/snippets/footer-social-list.twig' | storefront_path %}
+                <span class="footer-bottom--copyright">
+                    <span class="copyright-text">
+                        &copy; {{ 'now'|date('Y') }},
+                        <a href="{{ routes.root_url | preview_mode(preview_token) }}"
+                           rel="nofollow"
+                           class="link link--primary brand-link">
+                            {{ shop.name }}
+                        </a>.
+                    </span>
+                    <span class="powered-by-text">
+                        Powered by
+                        <span class="powered-by">
+                            <a href="https://uvodo.com/"
+                               target="_blank"
+                               rel="nofollow"
+                               class="link link--primary brand-link">&nbsp;
+                               Uvodo
+                            </a>
+                        </span>
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- End :: Footer -->
+
+<!-- Begin :: Float Social List -->
+{% include '/snippets/float-social-list.twig' | storefront_path %}
+<!-- End   :: Float Social List -->
+
+<style>
+    .skeleton-products:empty {
+        width: 310px;
+        height: 450px;
+        background-color: #ffffff;
+        border-radius: 3px 0 0 0;
+        background-image: linear-gradient(100deg, rgba(255, 255, 255, 0),
+        rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 80%),
+        linear-gradient(#F2F2F2 20px, transparent 0),
+        linear-gradient(#F2F2F2 20px, transparent 0),
+        linear-gradient(#F2F2F2 20px, transparent 0),
+        linear-gradient(#F2F2F2 328px, transparent 0);
+        background-repeat: repeat-y;
+        background-size: 50px 450px, 150px 450px, 300px 450px, 100px 450px, 310px 450px;
+        background-position: -20% 0, 20px 415px, 20px 385px, 20px 355px, 20px 20px;
+        animation: shineForSkeleton-products 2s infinite;
+    }
+
+    @keyframes shineForSkeleton-products {
+        to {
+            background-position: 120% 0, 20px 415px, 20px 385px, 20px 355px, 20px 20px;
+        }
+    }
+
+    .skeleton-search-product:empty {
+        position: relative;
+        height: 110px;
+        background-color: #ffffff;
+        border-radius: 0px 0px 0px 0px;
+        background-image: linear-gradient(#F2F2F2 15px, transparent 0),
+        linear-gradient(#F2F2F2 15px, transparent 0),
+        linear-gradient(#F2F2F2 20px, transparent 0),
+        linear-gradient(#F2F2F2 72px, transparent 0);
+        background-repeat: repeat-y;
+        background-size: 120px 110px, 250px 110px, 384px 110px, 72px 110px;
+        background-position: 110px 75px, 110px 50px, 110px 20px, 20px 20px;
+    }
+
+    .skeleton-search-product:empty {
+        position: relative;
+        height: 110px;
+        background-color: #ffffff;
+        border-radius: 0px 0px 0px 0px;
+        background-image: linear-gradient(#F2F2F2 15px, transparent 0),
+        linear-gradient(#F2F2F2 15px, transparent 0),
+        linear-gradient(#F2F2F2 20px, transparent 0),
+        linear-gradient(#F2F2F2 72px, transparent 0);
+        background-repeat: repeat-y;
+        background-size: 120px 110px, 250px 110px, 384px 110px, 72px 110px;
+        background-position: 110px 75px, 110px 50px, 110px 20px, 20px 20px;
+    }
+
+    .skeleton-search-product:empty:before {
+        content: ' ';
+        position: absolute;
+        z-index: 1000;
+        width: 100%;
+        height: 110px;
+        -webkit-mask-repeat: repeat-y;
+        -webkit-mask-size: 50px 110px;
+        -webkit-mask-position: -20% 0;
+        background-image: linear-gradient(#F2F2F2 15px, transparent 0),
+        linear-gradient(#F2F2F2 15px, transparent 0),
+        linear-gradient(#F2F2F2 20px, transparent 0),
+        linear-gradient(#F2F2F2 72px, transparent 0);
+        background-repeat: repeat-y;
+        background-size: 120px 110px, 250px 110px, 384px 110px, 72px 110px;
+        background-position: 110px 75px, 110px 50px, 110px 20px, 20px 20px;
+        animation: shineForSkeleton-search-product 2s infinite;
+    }
+
+    @keyframes shineForSkeleton-search-product {
+        to {
+            -webkit-mask-position: 120% 0
+        }
+    }
+</style>
+
+<script src="{{ "/scripts/vendor.js" | asset }}?v={{ "version" | theme_config }}"></script>
+<script src="{{ "/scripts/main.js" | asset }}?v={{ "version" | theme_config }}"></script>
+
+<script src="{{ "/scripts/libs/jquery/jquery-3.6.1.min.js" | asset }}"></script>
+<script src="{{ "/scripts/libs/jquery-modal/jquery.modal.min.js" | asset }}"></script>
+<script src="{{ "/scripts/libs/jquery-toast/jquery.toast.min.js" | asset }}"></script>
+
+<script>
+    let search_container = $('.search-dropdown');
+    search_container.html('');
+
+    let searchSkeletons = generateSearchProductSkeleton(4)
+    search_container.html(searchSkeletons);
+
+    function loadProducts(data, successCallback, errorCallback) {
+
+        let url = '{{ routes.all_product_items_url | preview_mode(preview_token) }}';
+
+        return ajaxRequest(url, 'GET', data, successCallback, errorCallback)
+    }
+
+    function loadOrders(data, successCallback, errorCallback) {
+
+        let url = '{{ routes.account_orders_items_url | preview_mode(preview_token) }}';
+
+        return ajaxRequest(url, 'GET', data, successCallback, errorCallback)
+    }
+
+    function loadProductsWithAjax(data, successCallback, errorCallback) {
+
+        let url = '{{ routes.ajax_all_products_url | preview_mode(preview_token) }}';
+
+        return ajaxRequest(url, 'GET', data, successCallback, errorCallback)
+    }
+
+    function loadProductDetails(data, successCallback, errorCallback) {
+
+        let url = '{{ routes.load_product_details_url | preview_mode(preview_token) }}';
+
+        return ajaxRequest(url, 'GET', data, successCallback, errorCallback)
+    }
+
+    function generateProductSkeleton(count = 4) {
+        let skeletons = "",
+            skeleton = '<div class="skeleton-products"></div>';
+
+        for (let i = 0; i < count; i++) {
+            skeletons += skeleton;
+        }
+
+        return skeletons;
+    }
+
+    function deleteProductSkeletons() {
+        $('.skeleton-products').each(function () {
+            $(this).remove();
+        })
+    }
+
+    function generateSearchProductSkeleton(count = 4) {
+        let searchSkeleton = '<div class="skeleton-search">' +
+            '<div class="skeleton skeleton-search-img"></div>' +
+            '<div class="skeleton-search-content">' +
+            '<div class="skeleton-search-title">' +
+            '<div class="skeleton skeleton-search-line"></div>' +
+            '<div class="skeleton skeleton-search-line"></div>' +
+            '</div>' +
+            '<div class="skeleton skeleton-search-price"></div>' +
+            '</div>' +
+            '</div>';
+
+        let skeletons = "";
+
+        for (let i = 0; i < count; i++) {
+            skeletons += searchSkeleton;
+        }
+
+        return skeletons;
+    }
+
+    function deleteSearchProductSkeletons() {
+        $('.skeleton-search').each(function () {
+            $(this).remove();
+        })
+    }
+
+    $('.product-search-input').on('input', function () {
+        clearTimeout(this.delay);
+        this.delay = setTimeout(function () {
+
+            let search_container = $('.search-dropdown');
+            search_container.html('');
+
+            let searchSkeletons = generateSearchProductSkeleton(4)
+            search_container.html(searchSkeletons);
+
+            let data = {
+                q: this.value,
+                limit: 8,
+                sort: '{{ sort ? sort : "updated_at:desc" }}'
+            }
+
+            loadProductsWithAjax(data, res => {
+                search_container.html('');
+
+                let productHtml = "";
+                res.map(item => {
+                    let variant = item.variants[0];
+
+                    let currentPrice = parseInt(variant.actual_price);
+
+                    let discountPriceEl = variant.sale_price ? '<del class="search-dropdown--item--price--previous">' +
+                        priceCalculation(variant.price) +
+                        '</del>' : '';
+
+                    let product_url = '{{ routes.product_url | preview_mode(preview_token) }}'.replace('s:slug', item.handle);
+
+                    productHtml += '<a href="' + product_url + '" class="search-dropdown--item">' +
+                        '<span class="search-dropdown--item--img">' +
+                        '<img src="' + (item.images.length > 0 ? item.images[0].src : '{{ "/images/product.png" | asset }}') + '"' +
+                        ' class="w-100 h-100 object-fit-cover" alt="product-title"></span>' +
+                        ' <div class="search-dropdown--item--body">' +
+                        '  <h6 class="search-dropdown--item--title">' + item.title + '</h6>' +
+                        ' <div class="search-dropdown--item--price">' +
+                        ' <span class="search-dropdown--item--price--current">' + (currentPrice ? priceCalculation(currentPrice) : "") + '</span>' +
+                        discountPriceEl +
+                        '</div>' +
+                        '</div>' +
+                        ' </a>'
+                })
+
+                search_container.html(productHtml);
+            }, err => {
+                console.log(err);
+            })
+        }.bind(this), 250);
+    })
+
+    $(document).on('click', '.basket-drawer-item-delete-btn', function () {
+        let variantId = $(this).parents('.basket-product--item:eq(0)').attr('data-basket-variant-id');
+        let quantity = 0;
+
+        showLoading(true);
+        decreaseCartItem(variantId, quantity, () => {
+            refreshCartBasket();
+        }, err => {
+            showToast(err.responseJSON.message)
+            showLoading(false);
+        })
+    })
+
+    $(document).on('click', '.basket-product--item--quantity--price .basket-decrease', function () {
+        let variantId = $(this).parents('.basket-product--item:eq(0)').attr('data-basket-variant-id');
+        let quantityInput = $(this).parents('.basket-product--item:eq(0)').find('.quantity-amount');
+        let quantity = parseInt(quantityInput.val());
+
+        showLoading(true);
+        decreaseCartItem(variantId, quantity - 1, () => {
+            refreshCartBasket();
+            quantityInput.val(quantity - 1)
+        }, err => {
+            quantityInput.val(quantity)
+            showToast(err.responseJSON.message)
+            showLoading(false);
+        })
+    })
+
+    $(document).on('click', '.basket-product--item--quantity--price .basket-increase', function () {
+        let variantId = $(this).parents('.basket-product--item:eq(0)').attr('data-basket-variant-id');
+        let quantityInput = $(this).parents('.basket-product--item:eq(0)').find('.quantity-amount');
+        let quantity = parseInt(quantityInput.val());
+
+        showLoading(true);
+        increaseCartItem(variantId, quantity + 1, () => {
+            refreshCartBasket();
+            quantityInput.val(quantity + 1)
+        }, err => {
+            quantityInput.val(quantity)
+            showToast(err.responseJSON.message)
+            showLoading(false);
+        })
+    })
+
+    function increaseCartItem(variantId, currentQuantity, successResponse, errorResponse) {
+        let items = [];
+        items.push({
+            id: variantId,
+            quantity: currentQuantity
+        });
+
+
+        let data = {
+            'items': items,
+            '_token': '{{ csrf_token() }}',
+            'preview': '{{ preview_token }}'
+        }
+
+        let url = '{{ routes.ajax_cart_update_url | preview_mode(preview_token) }}'.replace('s:action', 'update');
+
+        if (currentQuantity >= 0) {
+            showLoading(true);
+            ajaxRequest(url, 'POST', data, res => {
+                successResponse(res);
+            }, err => {
+                errorResponse(err);
+            })
+        }
+    }
+
+    function decreaseCartItem(variantId, currentQuantity, successResponse, errorResponse) {
+        let items = [];
+        items.push({
+            id: variantId,
+            quantity: currentQuantity
+        });
+
+
+        let data = {
+            'items': items,
+            '_token': '{{ csrf_token() }}',
+            'preview': '{{ preview_token }}'
+        }
+
+        let url = '{{ routes.ajax_cart_update_url | preview_mode(preview_token) }}'.replace('s:action', 'update');
+
+        if (currentQuantity >= 0) {
+            showLoading(true);
+            ajaxRequest(url, 'POST', data, res => {
+                successResponse(res);
+            }, err => {
+                errorResponse(err);
+            })
+        }
+    }
+
+    function priceCalculation(price) {
+        let fraction = {{ shop.currency.fraction_digits }};
+        let currency = '{{ shop.currency.symbol }}';
+
+        let priceAmount = (price / 10 ** (fraction ?? 0)).toFixed(fraction);
+
+        return priceAmount + ' ' + currency;
+    }
+
+    function refreshCartBasket() {
+        let basketContainer = $('.basket .basket-container--body');
+        let cartContainer = $('.cart-view-container');
+
+        let url = '{{ routes.ajax_load_basket_url | preview_mode(preview_token) }}';
+
+        ajaxRequest(url, 'GET', null, res => {
+            basketContainer.html('');
+            basketContainer.html(res.basket);
+
+            cartContainer.html('');
+            cartContainer.html(res.cart);
+
+            let basketCountEl = $('.cart-count');
+            let basketCount = parseInt(res.cart_count);
+
+            basketCountEl.html(basketCount);
+            showLoading(false);
+        }, () => {
+            showLoading(false);
+        })
+    }
+
+    function showToast(text) {
+        shakeScreen();
+        $.toast({
+            text: text,
+            showHideTransition: 'fade',
+            allowToastClose: false,
+            hideAfter: 4000,
+            loader: true,
+            loaderBg: '#121212',
+            stack: 10,
+            position: 'top-center',
+            bgColor: '#121212',
+            textColor: '#fff',
+            textAlign: 'left',
+            icon: false
+        })
+    }
+
+    function shakeScreen() {
+        $("body").addClass("shake");
+
+        setTimeout(function () {
+            $("body").removeClass("shake");
+        }, 300);
+    }
+</script>
+
+{# Add to cart for product atc item #}
+<script>
+    $(document).on('click', '.addToCartBtn', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        showLoading(true);
+
+        let variantId = $(this).parents('.product-atc-item:eq(0)').attr('data-variant-id')
+        let url = '{{ routes.ajax_cart_update_url | preview_mode(preview_token) }}'.replace('s:action', 'add');
+
+
+        let data = {
+            'id': variantId,
+            'quantity': 1,
+            '_token': '{{ csrf_token() }}'
+        };
+
+        ajaxRequest(url, 'POST', data, () => {
+            refreshCartBasket();
+
+            window.scrollTo(0, 0);
+
+            $(document).find('.basket-icon').trigger('click');
+        }, err => {
+            if (err.responseJSON.message) {
+                showToast(err.responseJSON.message);
+            }
+            showLoading(false);
+        })
+    })
+</script>
+
+<script>
+    function adjustSliderHeight(className) {
+        const slides = document.querySelectorAll(className);
+
+        for (const slide of slides) {
+            const bgImageUrl = slide.style.backgroundImage.replace(/url\((['"])?(.*?)\1\)/gi, '$2').split(',')[0];
+
+            // Create a new image to load and check its natural dimensions
+            const image = new Image();
+            image.onload = function () {
+                const aspectRatio = this.naturalHeight / this.naturalWidth;
+                const slideWidth = slide.offsetWidth;
+                slide.style.height = slideWidth * aspectRatio + 'px'; // Set the height based on the width and aspect ratio
+            };
+            image.src = bgImageUrl;
+        }
+    }
+
+    window.addEventListener('load', function () {
+        // Adjust the height of the slider to maintain the aspect ratio of the images
+        window.addEventListener('load', () => {
+            adjustSliderHeight('.mySlider-swiper-slide');
+            adjustSliderHeight('.myCollectionSlider-swiper-slide');
+        });
+        window.addEventListener('resize', () => {
+            adjustSliderHeight('.mySlider-swiper-slide');
+            adjustSliderHeight('.myCollectionSlider-swiper-slide');
+        });
+    });
+</script>
+
+<script>
+    $('.catalogBtn').on('click', function () {
+        $('body').css('overflow', 'hidden');
+        $('.drawer-menu-container').addClass('active');
+    })
+
+    // close drawer menu when click outside without drawer menu
+    $(document).on('click', function (event) {
+        let isClickInsideDrawerMenu = document.querySelector('.drawer-menu-container .content').contains(event.target);
+        let isClickInsideCatalogBtn = document.querySelector('.catalogBtn').contains(event.target);
+        if  (!isClickInsideDrawerMenu && !isClickInsideCatalogBtn) {
+            $('body').css('overflow', 'auto');
+            $('.drawer-menu-container').removeClass('active');
+        }
+    })
+
+    // close drawer menu when is mobile
+    $(window).on('resize', function () {
+        if ($(window).width() < 992) {
+            $('body').css('overflow', 'auto');
+            $('.drawer-menu-container').removeClass('active');
+        }
+    })
+</script>
+
+{{ render_scripts() | raw }}

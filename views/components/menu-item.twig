@@ -1,0 +1,37 @@
+<li>
+    <a href="{{ item.url | preview_mode(preview_token) }}"
+       title="{{ item.title }}"
+       target="{{ item.target }}"
+       class="header-holder--navigation--link {% if item.children | length < 1 %} underline-link {% endif %}">
+        <span>
+            {{ item.title }}
+        </span>
+        {% if item.children | length > 0 %}
+            <i class="ph ph-caret-down"></i>
+        {% endif %}
+    </a>
+
+    {% macro renderChildMenu(children, className = '') %}
+        <ul class="submenu {{ className }}">
+            {% for child in children %}
+                <li>
+                    <a href="{{ child.url | preview_mode(preview_token) }}"
+                       title="{{ child.title }}"
+                       target="{{ child.target }}"
+                       class="header-holder--navigation--link">
+                        <span>{{ child.title }}</span>
+                        {% if child.children | length > 0 %}
+                            <i class="ph ph-caret-right"></i>
+                        {% endif %}
+                    </a>
+
+                    {{ _self.renderChildMenu(child.children) }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endmacro %}
+
+    {{ _self.renderChildMenu(item.children,'first-submenu') }}
+</li>
+
+

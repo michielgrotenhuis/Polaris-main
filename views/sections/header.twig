@@ -1,0 +1,155 @@
+<style>
+    .header-holder--brand {
+        margin-right: 20px;
+    }
+
+    .catalogBtn {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 45px;
+        padding: 0 16px;
+        border: 1px solid #000;
+        border-radius: 0;
+        font-size: 14px;
+        color: #fff;
+        background: #000;
+        box-shadow: none;
+        cursor: pointer;
+    }
+
+    .catalogBtn i {
+        margin-right: 10px;
+        font-size: 19px;
+    }
+
+    .desktop-search {
+        width: 100%;
+        padding-right: 20px;
+    }
+
+    .header-holder--logo {
+        width: max-content;
+        max-width: 120px;
+    }
+
+    .desktop-search .search-holder {
+        padding: 0;
+        margin: 0 0 0 20px;
+        max-width: 600px;
+        width: 100%;
+    }
+
+    .desktop-search .search-holder--input .input-field {
+        border: 1px solid #e5e5e5;
+        border-radius: 0;
+        height: 45px;
+        padding: 0 10px;
+        font-size: 14px;
+        color: #000;
+        background: #fff;
+        box-shadow: none;
+    }
+
+    .desktop-search .search-holder--input .input-icon {
+        position: absolute;
+        right: 6px;
+        font-size: 20px;
+        top: 11px;
+    }
+
+    @media (max-width: 767px) {
+        .catalogBtn {
+            display: none;
+        }
+
+        .desktop-search {
+            display: none;
+        }
+    }
+</style>
+
+
+<header class="header">
+    <!-- Begin :: Welcome -->
+    {% include "/snippets/welcome.twig" | storefront_path %}
+    <!-- End :: Welcome -->
+
+    <!-- Begin :: Navigation -->
+    {% include "/snippets/navigation.twig" | storefront_path %}
+    <!-- End :: Navigation -->
+
+
+    <div class="wrapper">
+        <div class="header-holder">
+            <div class="header-holder--brand">
+                <div class="menu-toggle">
+                    <span class="trigger"></span>
+                </div>
+                {% include "/components/logo.twig" | storefront_path %}
+            </div>
+
+            <button class="catalogBtn">
+                <i class="ph ph-list"></i>
+                {{ "common.catalog" | trans }}
+            </button>
+
+            {% include "/components/drawer-menu.twig" | storefront_path with {'items' : menus.sidebar} %}
+
+            {% if device != "mobile" %}
+                {% include "/components/search.twig" | storefront_path %}
+            {% endif %}
+
+            <!-- Start Mobile Navigation -->
+            <div class="header-holder--navigation--mobile">
+                <div class="header-holder--navigation--top">
+                    {% include "/components/logo.twig" | storefront_path %}
+                    <button class="close-icon ph ph-x"></button>
+                </div>
+
+                {% include "/components/mobile-menu.twig" | storefront_path with {
+                    'sidebarItems' : menus.sidebar,
+                    'items' : menus.header
+                } %}
+            </div>
+            <div class="backdrop"></div>
+            <!-- Start Mobile Navigation -->
+
+            <div class="header-holder--action">
+                <a href="javascript:void(0)"
+                   class="header-holder--action--item ph-magnifying-glass search-open"></a>
+                {% if customer is not empty %}
+                    <a href="{{ routes.account_url | preview_mode(preview_token) }}"
+                       class="header-holder--action--item ph-user"><span class="username">Hi,
+                            {{ customer.first_name }}!</span></a>
+                {% else %}
+                    <a href="{{ routes.account_login_url | preview_mode(preview_token) }}"
+                       class="header-holder--action--item ph-user"></a>
+                {% endif %}
+                {% if "settings.status_add_to_cart" | setting != "hide" %}
+                    <div class="basket">
+                        <button class="header-holder--action--item basket-icon">
+                            <span class="basket-icon ph-bag"></span>
+                            <span class="cart-count">
+                                {{ cart.item_count | number_format }}
+                            </span>
+                        </button>
+                        <div class="basket-container">
+                            <div class="basket-container--header">
+                                <p class="basket-container--header--title">
+                                    {{ "cart.title" | trans }}
+                                </p>
+                                <span class="close-basket-btn ph ph-x"></span>
+                            </div>
+                            {% include "/snippets/basket.twig" | storefront_path with {'cart' : cart} %}
+                        </div>
+                        <div class="basket-backdrop"></div>
+                    </div>
+                {% endif %}
+            </div>
+
+            {% include "/components/mobile-search.twig" | storefront_path %}
+        </div>
+    </div>
+</header>

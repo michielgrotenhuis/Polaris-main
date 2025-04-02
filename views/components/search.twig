@@ -1,0 +1,23 @@
+<div class="desktop-search">
+    <div class="search-holder">
+        <div class="search-holder--input">
+            <div class="input-wrapper has-icon">
+                <form action="{{ routes.all_products_url | preview_mode(preview_token) }}">
+                    <input
+                            type="text"
+                            class="input-field input-field-lg search-input product-search-input"
+                            placeholder="Search"
+                            name="q"
+                            value=""
+                    />
+                    <button
+                            type="submit"
+                            class="input-icon input-icon-lg ph-magnifying-glass"
+                    ></button>
+                </form>
+            </div>
+        </div>
+        <div class="search-dropdown">
+        </div>
+    </div>
+</div>

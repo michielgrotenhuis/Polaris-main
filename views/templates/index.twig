@@ -1,0 +1,195 @@
+{% extends '/layouts/theme.twig' %}
+
+{% block css %}
+    <style>
+        .section-slider {
+            margin-top: 10px;
+        }
+
+        .section-popular {
+            margin-top: 78px;
+            margin-bottom: 52px;
+        }
+
+        .section-collections {
+            margin-top: 78px;
+            margin-bottom: 52px;
+        }
+
+        .product-slider-navigation {
+            background: white;
+            border: 0;
+            font-size: 22px;
+            color: #121212;
+            cursor: pointer;
+        }
+
+        .section-media {
+            margin-top: 104px;
+            margin-bottom: 104px;
+        }
+
+        .product-list {
+            margin: 0 !important;
+        }
+
+        .section-connect {
+            margin-top: 104px;
+            margin-bottom: 104px;
+        }
+
+        .slider-navigation-buttons--header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: inherit;
+        }
+
+        @media (max-width: 992px) {
+            .section-slider {
+                margin-top: 120px;
+            }
+
+            .show-welcome-store-banner .section-slider {
+                margin-top: 170px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-slider {
+                margin-top: 55px;
+            }
+
+            .show-welcome-store-banner .section-slider {
+                margin-top: 100px;
+            }
+
+            .product-list {
+                padding-left: 15px;
+            }
+
+            .section-connect {
+                margin-top: 55px;
+                margin-bottom: 55px;
+            }
+
+            .section-media {
+                margin-top: 55px;
+                margin-bottom: 55px;
+            }
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <!-- Begin :: Section Slider -->
+    {% if "home.main_slider_desktop_visibility" | setting != 'hide' %}
+        <section class="section-slider">
+            <div class="wrapper">
+                {% if device != "mobile" %}
+                    {% include '/sections/slider.twig' | storefront_path %}
+                {% else %}
+                    {% include '/sections/mobile/slider.twig' | storefront_path %}
+                {% endif %}
+            </div>
+        </section>
+    {% endif %}
+    <!-- End :: Section Slider -->
+
+    <!-- Begin :: Section Popular -->
+    {% if "home.product_list_one_visibility" | setting != 'hide' %}
+        <section class="section-popular">
+            <div class="wrapper">
+                <div class="section-content--header slider-navigation-buttons--header">
+                    <h2 class="section-content--header--title letter-spacing-6">
+                        Best Sellers
+                    </h2>
+                    <div class="section-slider-navigation">
+                        <button class="best-seller-slider-navigation--prev product-slider-navigation">
+                            <i class="ph ph-arrow-left"></i>
+                        </button>
+                        <button class="best-seller-slider-navigation--next product-slider-navigation">
+                            <i class="ph ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="product-list">
+                    {% include '/sections/products.twig' | storefront_path with {
+                        items: best_sellers,
+                        show: 24,
+                        className: 'best-seller-slider'
+                    } %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    <!-- End :: Section Popular -->
+
+    <!-- Begin :: Section Collections -->
+    {% if "home.collection_list_visibility" | setting != 'hide' %}
+        <section class="section-collections">
+            <div class="wrapper">
+                {% include '/sections/collections.twig' | storefront_path %}
+            </div>
+        </section>
+    {% endif %}
+    <!-- End :: Section Collections -->
+
+    <!-- Begin :: Section New Arrivals -->
+    {% if "home.product_list_two_visibility" | setting != 'hide' %}
+        <section class="section-popular">
+            <div class="wrapper">
+                <div class="section-content--header slider-navigation-buttons--header">
+                    <h2 class="section-content--header--title letter-spacing-6">
+                        New Arrivals
+                    </h2>
+                    <div class="section-slider-navigation">
+                        <button class="new-arrivals-slider-navigation--prev product-slider-navigation">
+                            <i class="ph ph-arrow-left"></i>
+                        </button>
+                        <button class="new-arrivals-slider-navigation--next product-slider-navigation">
+                            <i class="ph ph-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="product-list">
+                    {% include '/sections/products.twig' | storefront_path with {
+                        items: new_arrivals,
+                        show: 24,
+                        className: 'new-arrivals-slider'
+                    } %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    <!-- End :: Section New Arrivals -->
+
+    <!-- Begin :: Section Connect -->
+    {% if "home.connect_visibility" | setting != 'hide' %}
+        <section class="section-connect">
+            {% include '/sections/connect.twig' | storefront_path %}
+        </section>
+    {% endif %}
+    <!-- End :: Section Connect -->
+
+    <!-- Begin :: Section Media -->
+    {% if "home.media_visibility" | setting != 'hide' %}
+        <section class="section-media">
+            <div class="wrapper">
+                {% include '/sections/media.twig' | storefront_path %}
+            </div>
+        </section>
+    {% endif %}
+    <!-- End :: Section Media -->
+{% endblock %}
+
+{% block title %}{{ "home.seo_title" | setting ~ " - " ~ shop.name }}{% endblock %}
+
+{% block seo_tags %}
+    <meta name="description"
+          content="{{ "home.seo_description" | setting }}">
+    <meta name="og:title" content="{{ "home.seo_title" | setting }}">
+    <meta name="og:description"
+          content="{{ "home.seo_description" | setting }}">
+    <meta name="og:url" content="{{ canonical_url }}">
+    <meta name="og:image" content="{{ shop.image.src }}">
+{% endblock %}

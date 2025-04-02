@@ -1,0 +1,118 @@
+{% if menu.legals | length > 0 %}
+    <div class="uvomob-footer-accordion">
+        <input type="checkbox" id="legals" class="uvomob-footer-toggler">
+        <label for="legals" class="uvomob-footer-item uvomob-footer-main-item">
+            <span class="footer-column--title">{{ "footer.legals.text" | trans }}</span>
+            <span class="icon close-icon">+</span>
+            <span class="icon open-icon">-</span>
+        </label>
+
+        {{ _self.renderFooterMenu(menu.legals) }}
+    </div>
+{% endif %}
+{% if menu.company | length > 0 %}
+    <div class="uvomob-footer-accordion">
+        <input type="checkbox" id="company" class="uvomob-footer-toggler">
+        <label for="company" class="uvomob-footer-item uvomob-footer-main-item">
+            <span class="footer-column--title">{{ "footer.company.text" | trans }}</span>
+            <span class="icon close-icon">+</span>
+            <span class="icon open-icon">-</span>
+        </label>
+
+        {{ _self.renderFooterMenu(menu.company) }}
+    </div>
+{% endif %}
+{% if menu.links | length > 0 %}
+    <div class="uvomob-footer-accordion">
+        <input type="checkbox" id="links" class="uvomob-footer-toggler">
+        <label for="links" class="uvomob-footer-item uvomob-footer-main-item">
+            <span class="footer-column--title">{{ "footer.links.text" | trans }}</span>
+            <span class="icon close-icon">+</span>
+            <span class="icon open-icon">-</span>
+        </label>
+        {{ _self.renderFooterMenu(menu.links) }}
+    </div>
+{% endif %}
+
+{% macro renderFooterMenu(items) %}
+    {% for item in items %}
+        <div class="uvomob-footer-submenu">
+            {% if item.children | length > 0 %}
+                {% set menuId = random() %}
+                <input type="checkbox" id="submenu-{{ menuId }}" class="uvomob-footer-toggler">
+                <label for="submenu-{{ menuId }}" class="uvomob-footer-item">
+                    <span class="title header-holder--navigation--link">{{ item.title }}</span>
+                    <span class="icon close-icon">+</span>
+                    <span class="icon open-icon">-</span>
+                </label>
+                {{ _self.renderFooterMenu(item.children) }}
+            {% else %}
+                <a href="{{ item.url }}"
+                   class="uvomob-footer-item header-holder--navigation--link"
+                   title="{{ item.title }}"
+                >
+                    <span class="title header-holder--navigation--link">{{ item.title }}</span>
+                </a>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endmacro %}
+
+<style>
+    .uvomob-footer-accordion {
+        display: none;
+        width: 100%;
+    }
+
+    .uvomob-footer-toggler {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .uvomob-footer-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 45px;
+        border-bottom: 1px solid #eaeaea;
+        padding: 10px;
+    }
+
+    .uvomob-footer-submenu {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+    }
+
+    .uvomob-footer-toggler:checked ~ .uvomob-footer-submenu {
+        max-height: 100vh;
+    }
+
+    .icon {
+        transition: all 0.5s;
+    }
+
+    .open-icon {
+        display: none;
+    }
+
+    .uvomob-footer-toggler:checked ~ .uvomob-footer-item .close-icon {
+        display: none;
+    }
+
+    .uvomob-footer-toggler:checked ~ .uvomob-footer-item .open-icon {
+        display: inline;
+    }
+
+    .uvomob-footer-toggler:checked ~ .uvomob-footer-main-item {
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.04);
+        background: #eaeaea;
+    }
+
+
+    @media (max-width: 766px) {
+        .uvomob-footer-accordion {
+            display: block;
+        }
+    }
+</style>

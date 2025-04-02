@@ -1,0 +1,10 @@
+{% for order in orders %}
+    <div class="table-mobile-holder" data-order-id="{{ order.id }}">
+        <a href="{{ routes.account_order_detail_url | preview_mode(preview_token) | route("i:oid",order.id) }}"
+           class="table-mobile-item link">{{ order.name }}</a>
+        <span class="table-mobile-item">{{ order.created_at.format('Y-m-d H:i:s') }}</span>
+        <span class="table-mobile-item">{{ order.financial_status }}</span>
+        <span class="table-mobile-item">{{ order.fulfillment_status ? order.fulfillment_status : "Unfulfilled" }}</span>
+        <span class="table-mobile-item">{{ filter.money(order.total, order.currency.code) }}</span>
+    </div>
+{% endfor %}

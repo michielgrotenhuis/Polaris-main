@@ -1,0 +1,18 @@
+<div class="collection-org-img-fallback">
+    <img src="{{ image }}" class="w-100 h-100 object-fit-cover" alt="{{ alt }}">
+</div>
+
+<style>
+    .collection-org-img-fallback {
+        background-image: url('{{ "/images/template/product/fallback.jpeg" | asset }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 100%;
+    }
+
+    .collection-org-img-fallback img {
+        object-fit: {{ "settings.collection_image_size" | setting }} !important;
+    }
+</style>

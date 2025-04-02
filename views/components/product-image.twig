@@ -1,0 +1,19 @@
+<div class="product-org-img-fallback">
+    <img src="{{ image }}" class="org-img {{ class }}" alt="{{ alt }}"/>
+</div>
+
+<style>
+    .product-org-img-fallback {
+        background-image: url('{{ "/images/template/product/fallback.jpeg" | asset }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 100%;
+    }
+
+
+    .product-org-img-fallback img {
+        object-fit: {{ "settings.product_image_size" | setting }} !important;
+    }
+</style>

@@ -1,0 +1,248 @@
+{% extends '/layouts/theme.twig' %}
+
+{% block body %}
+    <main class="main-root product-detail">
+        <div class="wrapper">
+            <input type="hidden" name="fraction_digits" value="{{ shop.currency.fraction_digits }}">
+            <input type="hidden" name="currency" value="{{ shop.currency.code }}">
+
+            <div class="product-detail-container">
+                {% include 'snippets/product-detail.twig' | storefront_path %}
+            </div>
+        </div>
+    </main>
+
+    <section class="section-product all">
+        <div class="wrapper">
+            <div class="section-content--header">
+                <h2 class="section-content--header--title letter-spacing-6">
+                    {{ "product.other_products" | trans }}
+                </h2>
+                {% if products|length > 4 %}
+                    <div class="carousel-btn-list">
+                        <button class="product-all--btn--prev ph ph-arrow-left"></button>
+                        <button class="product-all--btn--next ph ph-arrow-right"></button>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="product-list no-grid">
+                <div class="swiper product-all--carousel">
+                    <div class="swiper-wrapper">
+                        {% for product in products %}
+                            {% include "/snippets/product-list-item-carousel.twig" | storefront_path with {'product' : product, 'additionalClass': 'swiper-slide'} %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block title %}{{ product.meta_title is not empty ? product.meta_title : product.title }}{% endblock %}
+
+{% block seo_tags %}
+    <meta name="description"
+          content="{{ product.meta_description is not empty ? product.meta_description : product.description | raw }}">
+    <meta name="og:title" content="{{ product.meta_title is not empty ? product.meta_title : product.title }}">
+    <meta name="og:description"
+          content="{{ product.meta_description is not empty ? product.meta_description : product.description | raw }}">
+    <meta name="og:url"
+          content="{{ routes.product_url | preview_mode(preview_token) | route("s:slug",product.handle) }}">
+    <meta name="og:image" content="{{ product.images | length > 0 ? product.images[0].src : shop.image.src }}">
+{% endblock %}
+
+{% block js %}
+    <script>
+        let galleryThumbs;
+        let galleryMain;
+
+        initSwiper('{{ variant and variant.image ? variant.image.id : 0 }}');
+
+        function initSwiper(imageId) {
+            let selected_image_id = imageId;
+
+            let activeIndex = parseInt(selected_image_id) > 0
+                ? $('[data-image-id="' + selected_image_id + '"]').attr('data-index')
+                : 0;
+
+            activeIndex = parseInt(activeIndex);
+
+            const productDetailSlideCounts = document.querySelectorAll(
+                ".product-detail--carousel--main .swiper-slide"
+            ).length;
+
+            const productDetailLoop = productDetailSlideCounts > 4;
+
+
+            galleryThumbs = new Swiper(".product-detail--carousel--thumbs", {
+                loop: productDetailLoop,
+                touchRatio: 1,
+                allowTouchMove: true,
+                spaceBetween: 10,
+                initialSlide: activeIndex,
+                activeIndex: activeIndex,
+                slidesPerView: 4,
+                freeMode: true,
+                watchSlidesProgress: true,
+                threshold: 10,
+                breakpoints: {
+                    0: {
+                        slidesPerView: 4,
+                    },
+                    420: {
+                        slidesPerView: 5,
+                    },
+                    575: {
+                        slidesPerView: 6,
+                    },
+                    767: {
+                        slidesPerView: 4,
+                    },
+                },
+            });
+
+            galleryMain = new Swiper(".product-detail--carousel--main", {
+                loop: productDetailLoop,
+                touchRatio: 1,
+                allowTouchMove: true,
+                initialSlide: activeIndex,
+                activeIndex: activeIndex,
+                spaceBetween: 10,
+                speed: 100,
+                effect: "fade",
+                navigation: {
+                    nextEl: ".product-detail--btn--next",
+                    prevEl: ".product-detail--btn--prev",
+                },
+                thumbs: {
+                    swiper: galleryThumbs,
+                },
+            });
+
+            //Product Detail Img Zoom Move Mouse
+            const carouselWrapper = document.querySelector(
+                ".swiper.product-detail--carousel--main .swiper-wrapper"
+            );
+
+            if (carouselWrapper) {
+                carouselWrapper.addEventListener("mousemove", onZoom);
+                carouselWrapper.addEventListener("mouseover", onZoom);
+                carouselWrapper.addEventListener("mouseleave", offZoom);
+
+                function onZoom(e) {
+                    const img = document.querySelector(
+                        ".swiper.product-detail--carousel--main .swiper-slide-active img"
+                    );
+
+                    // container clientX and clientY
+                    const containerX = carouselWrapper.getBoundingClientRect().x;
+                    const containerY = carouselWrapper.getBoundingClientRect().y;
+
+                    const x = e.clientX - containerX;
+                    const y = e.clientY - containerY;
+
+                    img.style.transformOrigin = `${x}px ${y}px`;
+                    img.style.transform = "scale(3)";
+                }
+
+                function offZoom() {
+                    const img = document.querySelector(
+                        ".swiper.product-detail--carousel--main .swiper-slide-active img"
+                    );
+
+                    img.style.transformOrigin = `center center`;
+                    img.style.transform = "scale(1)";
+                }
+            }
+        }
+
+        $(document).on('click', '.variant-item--option--name', function (e) {
+            handleVariantChange(e);
+        });
+
+        function handleVariantChange(e) {
+            let combinations = [];
+
+            // get selected class from all prev .variant-item till e.target
+            $(e.target).closest('.variant-item').prevAll().each(function () {
+                if ($(this).find('.variant-item--option--name').hasClass('selected')) {
+                    combinations.unshift($(this).find('.variant-item--option--name.selected').attr(`value`));
+                }
+            })
+
+            // get selected value closest e.target
+            let selectVal = $(e.target).closest('.variant-item--option--name').attr(`value`);
+            if (selectVal) {
+                combinations.push(selectVal);
+            }
+
+            console.warn("combinations", {combinations, selectVal})
+
+            let url = '{{ routes.load_product_details_url | preview_mode(preview_token) }}'.replace('s:slug', '{{ product.handle }}');
+
+            let data = {
+                'combinations': combinations
+            };
+
+            showLoading(true);
+            ajaxRequest(url, 'GET', data, res => {
+                let productDetail = $('.product-detail-container');
+                productDetail.html(res.html);
+
+                initSwiper(res.imageId);
+                showLoading(false);
+            }, () => {
+                showLoading(false);
+            })
+        }
+
+        $(document).on('click', '.addCartBtn', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let productFeature = $('.product-detail--feature');
+
+            let variantId = productFeature.find('input[name="id"]').val();
+            let quantity = productFeature.find('input[name="quantity"]').val();
+
+            showLoading(true);
+
+            let url = '{{ routes.ajax_cart_update_url | preview_mode(preview_token) }}'.replace('s:action', 'add');
+
+            let data = {
+                'id': variantId,
+                'quantity': quantity,
+                '_token': '{{ csrf_token() }}'
+            };
+
+            ajaxRequest(url, 'POST', data, () => {
+                refreshCartBasket();
+
+                window.scrollTo(0, 0);
+
+                $(document).find('.basket-icon').trigger('click');
+            }, err => {
+                if (err.responseJSON.message) {
+                    showToast(err.responseJSON.message);
+                }
+                showLoading(false);
+            })
+        })
+
+        $(document).on('click', '.product-detail--action .increase', function () {
+            let quantity = parseInt($(this).parents('.product-detail--action:eq(0)')
+                .find('.cart-list--item--quantity--input').val());
+
+            $('.cart-list--item--quantity--input').val(quantity + 1);
+        })
+
+        $(document).on('click', '.product-detail--action .decrease', function () {
+            let quantity = parseInt($(this).parents('.product-detail--action:eq(0)')
+                .find('.cart-list--item--quantity--input').val());
+
+            if (quantity > 1) {
+                $('.cart-list--item--quantity--input').val(quantity - 1);
+            }
+        })
+    </script>
+{% endblock %}

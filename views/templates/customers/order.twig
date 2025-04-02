@@ -1,0 +1,155 @@
+{% extends '/layouts/account.twig' %}
+
+{% block breadcrumb %}
+    <div class="breadcrumb">
+        <a href="{{ routes.root_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link">{{ "common.home" | trans }}</a>
+        <a href="{{ routes.account_orders_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link">{{ "orders.title" | trans }}</a>
+        <a href="#" class="breadcrumb-link active">{{ "order.title" | trans }} #{{ order.id }}</a>
+    </div>
+{% endblock %}
+
+{% block title %}{{ "order.title" | trans  ~ " - " ~ shop.name }}{% endblock %}
+
+{% block account_heading %}
+    <div class="profile-heading">
+        <h1 class="profile-heading--title">{{ "order.title" | trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block account_body %}
+    <div class="col-xl-9 col-lg-9 col-md-12 offset-xl-1 mobile-order-1">
+        <div class="order-detail">
+            <div class="order-detail--heading">
+                <h2 class="order-detail--heading--title">{{ "order.title" | trans }} #{{ order.id }}</h2>
+                <span class="order-detail--heading--subtitle">{{ order.created_at | date("Y-m-d H:i:s") }}</span>
+            </div>
+            <div class="row gutter-24">
+                <div class="col-xl-5 col-lg-6 col-md-6">
+                    <div class="order-detail--holder">
+                        <h4 class="order-detail--title">{{ "order.billing_address" | trans }}</h4>
+                        {% set billing_address = order.billing_address is not empty ? order.billing_address : order.shipping_address %}
+                        {% if billing_address.first_name is not empty %}
+                            <span class="order-detail--item">{{ billing_address.first_name }} {{ billing_address.last_name }}</span>
+                        {% endif %}
+                        {% if billing_address.phone_number is not empty %}
+                            <span class="order-detail--item">{{ billing_address.phone_number.number }}</span>
+                        {% endif %}
+                        {% if billing_address.company_name is not empty %}
+                            <span class="order-detail--item">{{ billing_address.company_name }}</span>
+                        {% endif %}
+                        {% if billing_address.street is not empty %}
+                            <span class="order-detail--item">
+                                {{ billing_address.street.address1 }}
+                                {{ billing_address.street.address2 }}
+                                {{ billing_address.zip }}
+                             </span>
+                        {% endif %}
+                        {% if billing_address.city is not empty or billing_address.country.name is not empty %}
+                            <span class="order-detail--item">{{ billing_address.city }} , {{ billing_address.country.name }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6 col-md-6">
+                    <div class="order-detail--holder">
+                        <h4 class="order-detail--title">{{ "order.shipping_address" | trans }}</h4>
+                        {% if order.shipping_address.first_name is not empty %}
+                            <span class="order-detail--item">{{ order.shipping_address.first_name }} {{ order.shipping_address.last_name }}</span>
+                        {% endif %}
+                        {% if order.shipping_address.phone_number is not empty %}
+                            <span class="order-detail--item">{{ order.shipping_address.phone_number.number }}</span>
+                        {% endif %}
+                        {% if order.shipping_address.company_name is not empty %}
+                            <span class="order-detail--item">{{ order.shipping_address.company_name }}</span>
+                        {% endif %}
+                        {% if order.shipping_address.street is not empty %}
+                            <span class="order-detail--item">
+                                {{ order.shipping_address.street.address1 }}
+                                {{ order.shipping_address.street.address2 }}
+                                {{ order.shipping_address.zip }}
+                            </span>
+                        {% endif %}
+                        {% if order.shipping_address.city is not empty or order.shipping_address.country.name is not empty %}
+                            <span class="order-detail--item">{{ order.shipping_address.city }} , {{ order.shipping_address.country.name }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="table-holder">
+                <!-- Begin :: Table Web -->
+                <div class="table-web">
+                    <table class="table">
+                        <thead>
+                        <th>{{ "order.product" | trans }}</th>
+                        <th>{{ "order.variant" | trans }}</th>
+                        <th>{{ "order.price" | trans }}</th>
+                        <th>{{ "order.total_amount" | trans }}</th>
+                        </thead>
+                        <tbody>
+                        {% for item in order.items %}
+                            <tr>
+                                <td>
+                                    <a href="{{ routes.product_url | preview_mode(preview_token) | route("s:slug",item.product.handle) }}"
+                                       title="{{ item.product.title }}"
+                                       class="link">
+                                        {{ item.product.title }}
+                                    </a></td>
+                                <td>
+                                    {% for option in item.variant.option_values %}
+                                        <span>{{ option.option }}: {{ option.name }}</span>
+                                        {% if not loop.last %} / {% endif %}
+                                    {% endfor %}
+                                    {% if item.variant.option_values | length < 1 %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.quantity }} x {{ filter.money(item.variant.actual_price, cart.currency.code) }}</td>
+                                <td>{{ filter.money(item.quantity*item.variant.actual_price, cart.currency.code) }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End  :: Table Web -->
+
+                <!-- Begin :: Table Mobile -->
+                <div class="table-mobile">
+                    {% for item in order.items %}
+                        <div class="table-mobile-holder">
+                            <a href="{{ routes.product_url | preview_mode(preview_token) | route("s:slug",item.product.handle) }}"
+                               title="{{ item.product.title }}"
+                               class="table-mobile-item link link--primary">{{ item.product.title }}</a>
+                            <div>
+                                {% for option in item.variant.values %}
+                                    <span>{{ option.option }}: {{ option.value }}</span>
+                                {% endfor %}
+                            </div>
+                            <span class="table-mobile-item">{{ item.quantity }} x {{ filter.money(item.variant.actual_price, cart.currency.code) }}</span>
+                            <span class="table-mobile-item">{{ filter.money(item.quantity*item.variant.actual_price, cart.currency.code) }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- End  :: Table Mobile -->
+            </div>
+            <div class="order-detail--payment">
+                <div class="row gutter-24 flex-end">
+                    <div class="col-xl-4 col-lg-4 col-md-5">
+                        <div class="info-item">
+                            <span class="info-item--label">{{ "order.shipping" | trans }}:</span>
+                            <span class="info-item--value">{{ filter.money(order.shipping_cost, order.currency.code) }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item--label">{{ "order.tax" | trans }}</span>
+                            <span class="info-item--value">{{ filter.money(order.total_tax_cost, order.currency.code) }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-item--label">{{ "order.total_amount" | trans }}</span>
+                            <span class="info-item--value">{{ filter.money(order.total, order.currency.code) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

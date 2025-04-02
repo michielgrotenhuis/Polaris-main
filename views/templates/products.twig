@@ -1,0 +1,210 @@
+{% extends 'layouts/theme.twig' %}
+
+{% block body %}
+    <style>
+        .btn--load-more {
+            display: block;
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 0;
+            padding: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            transition: all 0.3s ease-in-out;
+            margin: 40px auto 0;
+        }
+    </style>
+
+    <main class="main-root">
+        <div class="wrapper">
+            <div class="page-holder">
+                <div class="breadcrumb">
+                    <a href="{{ routes.root_url | preview_mode(preview_token) }}"
+                       class="breadcrumb-link">{{ "common.home" | trans }}</a>
+                    <a href="#" class="breadcrumb-link active">{{ "products.title" | trans }}</a>
+                </div>
+                <div class="page-header">
+                    <h1 class="page-header--title">{{ "products.title" | trans }}</h1>
+                    <div class="page-header--select">
+                        <div class="select" data-selected="updated_at:desc">
+                            <button class="select-header">
+                                <p class="select-header--content">
+                                    Newest
+                                </p>
+                            </button>
+                            <div class="select-body">
+                                <ul class="select-option--list">
+                                    {% set sort = request.get('sort') %}
+                                    {% set sort = sort ? sort : 'updated_at:desc' %}
+                                    {% set sorting = {
+                                        'updated_at:desc' : 'Newest',
+                                        'price:desc' : 'Price: High to Low',
+                                        'price:asc' : 'Price: Low to High',
+                                        'orders_count:desc' : 'Best Selling'
+                                    } %}
+
+                                    {% for key , sortItem in sorting %}
+                                        <li class="select-option--list--item"
+                                            value="{{ key }}">
+                                            {{ sortItem }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="select-backdrop"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-container">
+                    <div class="row gutter-32 mobile-gutter-16 products">
+                        {% for product in products %}
+                            {% include "/snippets/product-list-item-grid.twig" | storefront_path with {'product' : product} %}
+                        {% endfor %}
+                    </div>
+                    <div class="row gutter-32">
+                        <button class="btn btn--primary btn--lg btn--block btn--load-more"
+                                onclick="loadProductItems()">
+                            {{ "common.load_more" | trans }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block title %}{{ "home.seo_title" | setting ~ " - " ~ shop.name }}{% endblock %}
+
+{% block seo_tags %}
+    <meta name="description"
+          content="{{ "home.seo_description" | trans }}">
+    <meta name="og:title" content="{{ "home.seo_title" | trans }}">
+    <meta name="og:description"
+          content="{{ "home.seo_description" | trans }}">
+    <meta name="og:url" content="{{ canonical_url }}">
+    <meta name="og:image" content="{{ shop.image.src }}">
+{% endblock %}
+
+{% block js %}
+    <script>
+        let lastProductId = 0;
+        let products_container = $('.products');
+
+        loadProductItems();
+
+        {# $(window).scroll(function () { #}
+
+        {#    if ($(window).scrollTop() === $(document).height() - $(window).height()) { #}
+        {#        let lastProduct = $('[data-product-id]').last(); #}
+        {#        let latestProductId = lastProduct.attr('data-product-id'); #}
+
+        {#        if (latestProductId !== lastProductId) { #}
+        {#            lastProductId = latestProductId; #}
+
+        {#            if (latestProductId) { #}
+        {#                let data = { #}
+        {#                    limit: 12, #}
+        {#                    sort: '{{ sort ? sort : "updated_at:desc" }}', #}
+        {#                    starting_after: latestProductId #}
+        {#                } #}
+
+        {#                loadProducts(data, res => { #}
+        {#                    products_container.append(res); #}
+
+        {#                    products_container.find('.product-list--item').each(function () { #}
+        {#                        $(this).removeClass('product-list--item'); #}
+        {#                        $(this).addClass('col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6'); #}
+        {#                        $(this).find('.card').addClass('card-space card-single'); #}
+        {#                    }) #}
+        {#                }, err => { #}
+        {#                    console.log(err); #}
+        {#                }) #}
+        {#            } #}
+        {#        } #}
+        // }
+        {# }); #}
+
+        // sort products
+        $('.select-option--list--item').each(function (item) {
+            const value = $(this).attr('value');
+
+            $(this).on('keydown', function (e) {
+                if (e.keyCode === 13) {
+                    buildUrlWithSort(value);
+                }
+            })
+
+            $(this).on('click', function () {
+                buildUrlWithSort(value);
+            })
+        })
+
+        function loadProductItems() {
+            let lastProduct = $('[data-product-id]').last();
+            let latestProductId = lastProduct.attr('data-product-id');
+
+            if (latestProductId !== lastProductId) {
+                lastProductId = latestProductId;
+
+                if (latestProductId) {
+                    let data = {
+                        limit: 12,
+                        sort: '{{ sort ? sort : "updated_at:desc" }}',
+                        starting_after: latestProductId
+                    }
+
+                    loadProducts(data, res => {
+                        products_container.append(res);
+
+                        products_container.find('.product-list--item').each(function () {
+                            $(this).removeClass('product-list--item');
+                            $(this).addClass('col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6');
+                            $(this).find('.card').addClass('card-space card-single');
+                        })
+
+                        if (res.length < 12) {
+                            $('.btn--load-more').hide();
+                        }
+                    }, err => {
+                        console.log(err);
+                    })
+                }
+            }
+        }
+
+        function buildUrlWithSort(sortValue) {
+            // replace sort param with new sort value
+            let url = new URL(window.location.href);
+            url.searchParams.set('sort', sortValue);
+
+            // redirect to new url
+            window.location.href = url.href;
+        }
+
+        function selectValue() {
+            const queryString = window.location.search;
+            const searchParam = new URLSearchParams(queryString);
+            const sortKey = searchParam.get('sort');
+
+            const select = document.querySelector('.select');
+
+            const selectHeaderContent = document.querySelector('.select-header--content');
+            const sortingOptions = {
+                'updated_at:desc': 'Newest',
+                'price:desc': 'Price: High to Low',
+                'price:asc': 'Price: Low to High',
+                'orders_count:desc': 'Best Selling'
+            };
+
+            if (sortingOptions.hasOwnProperty(sortKey)) {
+                selectHeaderContent.textContent = sortingOptions[sortKey];
+                select.setAttribute('data-selected', sortKey);
+            }
+        }
+
+        selectValue();
+    </script>
+{% endblock %}

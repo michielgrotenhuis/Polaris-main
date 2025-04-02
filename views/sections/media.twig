@@ -1,0 +1,108 @@
+<style>
+    .media-container .channel-btn {
+        background-color: {{ "home.media_channel_bg_color" | setting }};
+        color: {{ "home.media_channel_text_color" | setting }};
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        text-decoration: none;
+    }
+
+    .media-container .channel-btn:hover {
+        background-color: {{ "home.media_channel_text_color" | setting }};
+        color: {{ "home.media_channel_bg_color" | setting }};
+        border: 1px solid{{ "home.media_channel_bg_color" | setting }};
+    }
+
+    .media-container .channel-btn i {
+        margin-left: 10px;
+        font-size: 20px;
+    }
+
+    .media-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 20px;
+    }
+
+    .media-card {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        height: 300px;
+    }
+
+    .media-card iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+
+    .channel-btn-mobile {
+        display: none !important;
+    }
+
+    .media-container--header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: inherit;
+    }
+
+    @media (max-width: 991px) {
+        .media-list {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 767px) {
+        .media-list {
+            grid-template-columns: repeat(1, 1fr);
+            gap: 25px;
+        }
+
+        .channel-btn {
+            display: none !important;
+        }
+
+        .channel-btn-mobile {
+            display: flex !important;
+            margin: 20px 0;
+        }
+    }
+</style>
+
+<div class="media-container">
+    <div class="section-content--header media-container--header">
+        <h2 class="section-content--header--title letter-spacing-6">
+            Media &amp; Entertainment
+        </h2>
+        <a class="channel-btn" href="{{ "home.media_channel_link" | setting }}" target="_blank"
+           title="{{ shop.name }} media channel">
+            {{ "home.media_channel_text" | setting }}
+            <i class="ph ph-play"></i>
+        </a>
+    </div>
+    <div class="media-list">
+        {% for media in "home.media" | setting %}
+            <div class="media-card">
+                <iframe src="{{ media | list_item("url") }}" allowfullscreen></iframe>
+            </div>
+        {% endfor %}
+    </div>
+
+    <a class="channel-btn channel-btn-mobile" href="{{ "home.media_channel_link" | setting }}" target="_blank"
+       title="{{ shop.name }} media channel">
+        {{ "home.media_channel_text" | setting }}
+        <i class="ph ph-play"></i>
+    </a>
+</div>

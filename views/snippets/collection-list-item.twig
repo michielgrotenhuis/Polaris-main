@@ -1,0 +1,26 @@
+<style>
+    .collection-list-item--title--{{ collection.handle }} {
+        color: {{ "home.collection_title_color" | setting }} !important;
+        background-color: {{ "home.collection_title_bg_color" | setting }};
+        display: table;
+        padding: 4px;
+    }
+</style>
+<div class="product-list--item {{ is_first ? "first" : "" }}">
+    <div class="card">
+        <a href="{{ routes.collection_url | preview_mode(preview_token) | route("s:slug",collection.handle) }}"
+           class="card-holder" title="{{ collection.title }}">
+            <div class="card-holder--img">
+                {% include "/components/collection-image.twig" | storefront_path with {
+                    "image": collection.image_url,
+                    "alt": collection.title
+                } only %}
+
+                <h2 class="section-content--header--title letter-spacing-6 collection-list-item--title--{{ collection.handle }}">
+                    {{ collection.title }}
+                </h2>
+            </div>
+        </a>
+    </div>
+</div>
+

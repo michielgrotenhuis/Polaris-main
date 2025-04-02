@@ -1,0 +1,85 @@
+<div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-6" data-product-id="{{ product.id }}">
+    <div class="card card-space card-single">
+        <a href="{{ routes.product_url | preview_mode(preview_token) | route("s:slug",product.handle) }}"
+           class="card-holder"
+           target="{{ "settings.open_new_tab_product" | setting }}">
+            <div class="card-holder--img">
+                {% include "/components/product-image.twig" | storefront_path with {
+                    "image": product.images ? product.images[0].src : "/images/product.png" | asset,
+                    "class": "w-100 h-100 object-fit-cover " ~ (product.images | length < 2 ? "" : "primary-img"),
+                    "alt": product.title
+                } only %}
+                {% if product.images | length > 1 %}
+                    {% include "/components/product-image.twig" | storefront_path with {
+                        "image": product.images[1].src,
+                        "class": "w-100 h-100 object-fit-cover secondary-img",
+                        "alt": product.title
+                    } only %}
+                {% endif %}
+
+                {% set variant = product.variants | first %}
+                {% for var in product.variants %}
+                    {% if var.sale_price and var.price %}
+                        {% set variant = var %}
+                    {% endif %}
+                {% endfor %}
+                {% if variant.sale_price and variant.price %}
+                    <div class="product-badge">
+                        <span class="product-badge--discount">-{{ (100 - variant.sale_price * 100 / variant.price) | round(0,'floor') }}%</span>
+                    </div>
+                {% endif %}
+
+                {% if product.in_stock == false %}
+                    <div class="product-info">
+                        <span class="product-info--text">{{ "product.out_of_stock" | trans }}</span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-holder--body">
+                <h4 class="card-holder--title">
+                    {{ product.title }}
+                </h4>
+
+                {% if "settings.product_price_type" | setting == "range_price" %}
+                    <div class="card-holder--price">
+                        {% if product.min_price.sale_price and product.price_interval.min == product.price_interval.max %}
+                            <span class="card-holder--price--current">{{ filter.money(product.min_price.sale_price, shop.currency.code) }}</span>
+                            <del class="card-holder--price--previous">{{ filter.money(product.min_price.price, shop.currency.code) }}</del>
+                        {% else %}
+                            {% if product.price_interval.min == product.price_interval.max %}
+                                {% if product.min_price.sale_price %}
+                                    <span class="card-holder--price--current">{{ filter.money(product.min_price.sale_price, shop.currency.code) }}</span>
+                                    <del class="card-holder--price--previous">{{ filter.money(product.min_price.price, shop.currency.code) }}</del>
+                                {% else %}
+                                    <span class="card-holder--price--current">{{ filter.money(product.min_price.price, shop.currency.code) }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="card-holder--price--current">
+                                {{ filter.raw_money(product.price_interval.min, shop.currency.code) }}
+                                - {{ filter.money(product.price_interval.max, shop.currency.code) }}</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% elseif "settings.product_price_type" | setting == "lower_price" %}
+                    <div class="card-holder--price">
+                        {% if product.min_price.sale_price %}
+                            <span class="card-holder--price--current">{{ filter.money(product.min_price.sale_price, shop.currency.code) }}</span>
+                            <del class="card-holder--price--previous">{{ filter.money(product.min_price.price, shop.currency.code) }}</del>
+                        {% else %}
+                            <span class="card-holder--price--current">{{ filter.money(product.min_price.price, shop.currency.code) }}</span>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="card-holder--price">
+                        {% if product.max_price.sale_price %}
+                            <span class="card-holder--price--current">{{ filter.money(product.max_price.sale_price, shop.currency.code) }}</span>
+                            <del class="card-holder--price--previous">{{ filter.money(product.max_price.price, shop.currency.code) }}</del>
+                        {% else %}
+                            <span class="card-holder--price--current">{{ filter.money(product.max_price.price, shop.currency.code) }}</span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </a>
+    </div>
+</div>

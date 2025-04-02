@@ -1,0 +1,18 @@
+{% extends '/layouts/theme.twig' %}
+
+{% set link = '<a href="' ~ routes.root_url | preview_mode(preview_token) ~ '" class="link link--primary">' ~ "errors.404.click_text" | trans ~ '</a>' %}
+
+{% block body %}
+    <main class="main-root">
+        <div class="wrapper">
+            <div class="status-message--container">
+                <div class="status-message">
+                    <h2 class="status-message--title">{{ "errors.404.title" | trans }}</h2>
+                    <p class="status-message--subtitle">{{ "errors.404.description" | trans }}
+                        {{ "errors.404.back" | trans({"click_link": link}) | raw }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}

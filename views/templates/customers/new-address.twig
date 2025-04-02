@@ -1,0 +1,234 @@
+{% extends '/layouts/account.twig' %}
+
+{% block breadcrumb %}
+    <div class="breadcrumb">
+        <a href="{{ routes.root_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link">{{ "common.home" | trans }}</a>
+        <a href="{{ routes.account_addresses_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link">{{ "addresses.title" | trans }}</a>
+        <a href="{{ routes.account_addresses_create_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link active">{{ "addresses.new_address" | trans }}</a>
+    </div>
+{% endblock %}
+
+{% block account_heading %}
+    <div class="profile-heading">
+        <h1 class="profile-heading--title">{{ "addresses.new_address" | trans }}</h1>
+    </div>
+{% endblock %}
+
+{% block title %}{{ "addresses.new_address" | trans  ~ " - " ~ shop.name }}{% endblock %}
+
+{% block account_body %}
+    <div class="col-xl-9 col-lg-9 col-md-12 offset-xl-1 mobile-order-1">
+        <form action="{{ routes.ajax_account_addresses_create_url | preview_mode(preview_token) }}" method="post">
+            {{ csrf_input() }}
+            <input type="hidden" name="preview" value="{{ preview_token }}">
+
+            <div class="row gutter-24">
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.first_name" | trans }}"
+                               name="first_name">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.last_name" | trans }}"
+                               name="last_name">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.addr1" | trans }}"
+                               name="address1">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.addr2" | trans }}"
+                               name="address2">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.company" | trans }}"
+                               name="company_name">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.zip" | trans }}"
+                               name="zip_code">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <select class="country_select input-field" name="country">
+                            <option disabled selected>{{ "address.country" | trans }}</option>
+                        </select>
+                        <span class="input-icon ph-chevron-down"></span>
+                    </div>
+                </div>
+                <div class="state_select_container col-xl-5 col-lg-6" style="display: none">
+                    <div class="input-wrapper m-b-24">
+                        <select class="state_select input-field" name="state">
+                            <option disabled selected>{{ "address.state" | trans }}</option>
+                        </select>
+                        <span class="input-icon ph-chevron-down"></span>
+                    </div>
+                </div>
+                <div class="city_container col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.city" | trans }}" name="city">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6">
+                    <div class="input-wrapper m-b-24">
+                        <input type="text" class="input-field" placeholder="{{ "address.phone" | trans }}"
+                               name="phone_number">
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col m-b-24">
+                <label for="1" class="checkbox">
+                    <input type="checkbox" name="is_default_imt" id="1" value="0">
+                    <span class="checkbox-control"></span>
+                    <span class="checkbox-label">{{ "address.set_default" | trans }}</span>
+                </label>
+            </div>
+
+            <input type="hidden" name="is_default" value="0">
+            <button class="btn btn-md btn-dark save_address">{{ "address.save" | trans }}</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        loadCountries();
+
+        $('.country_select').on('change', function () {
+            let country_code = $(this).val();
+
+            loadProvinces(country_code);
+        })
+
+        $('.save_address').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let isDefault = $('input[name="is_default_imt"]').is(':checked') ? 1 : 0;
+
+            $('input[name="is_default"]').val(isDefault);
+
+            clearSuccesses();
+            clearErrors();
+            showLoading(true);
+
+
+            let form = $(this).parents('form:eq(0)');
+
+            let url = form.attr('action');
+
+            ajaxRequest(url, 'POST', form.serialize(), res => {
+                let edit_url = '{{ routes.account_addresses_edit_url | preview_mode(preview_token) }}';
+
+                if (res.id === undefined) {
+                    window.location.href = '{{ routes.account_addresses_url | preview_mode(preview_token) }}';
+                } else {
+                    edit_url = edit_url.replace("i:aid", res.id);
+
+                    window.location.href = edit_url;
+
+                    $('form').find('.has-error').removeClass("has-error")
+
+                    form.prev().remove();
+                    form.before('<div class="alert alert--success m-b-24">Successfully created</div>');
+
+                    setTimeout(function () {
+                        showLoading(false);
+                    }, 1500);
+                }
+            }, err => {
+                showLoading(false);
+                if (err.responseJSON && err.responseJSON.errors) {
+                    err.responseJSON.errors.map(err => {
+                        if (err.field === "country") {
+                            let element = $('[name="country"]')
+                            loadValidation(element, err.title);
+                        } else if (err.field === "phone_number") {
+                            let element = $('[name="phone_number"]')
+                            loadValidation(element, err.title);
+                        }
+                    })
+                }
+            });
+        })
+
+        function loadCountries() {
+            ajaxRequest('{{ routes.data_countries_url | preview_mode(preview_token) }}', 'GET', null, res => {
+                let country_element = $('.country_select');
+                country_element.html('');
+
+                let country_options = "<option disabled selected>{{ "address.country" | trans }}</option>";
+                res.map(country => {
+                    country_options += "<option value='" + country.alpha2 + "'>" + country.localName + "</option>"
+                })
+
+                country_element.html(country_options);
+            }, err => {
+                console.log(err);
+            })
+        }
+
+        function loadProvinces(country_code) {
+            let url = '{{ routes.data_provinces_url | preview_mode(preview_token) }}'.replace('s:code', country_code);
+
+            ajaxRequest(url, 'GET', null, res => {
+                let state_element = $('.state_select');
+                state_element.html('');
+
+                let state_options = "<option disabled selected>{{ "address.state" | trans }}</option>";
+
+                if (res.length > 0) {
+                    $('.state_select_container').show();
+                    $('.city_container').hide();
+                } else {
+                    $('.state_select_container').hide();
+                    $('.city_container').show();
+                }
+
+                res.map(state => {
+                    state_options += "<option value='" + state.code + "'>" + state.localName + "</option>"
+                })
+
+                state_element.html(state_options);
+            }, err => {
+                console.log(err);
+            })
+        }
+
+        function loadValidation(element, title) {
+            element.parent().addClass('has-error');
+            element.next().remove();
+            element.after('<span class="error-message">' + title + '</span>');
+        }
+
+        function clearErrors() {
+            $('.has-error').each(function (i) {
+                $(this).removeClass('has-error');
+            })
+
+            $('.error-message').each(function (i) {
+                $(this).remove();
+            });
+        }
+
+        function clearSuccesses() {
+            $('.alert--success').each(function (i) {
+                $(this).remove();
+            })
+        }
+    </script>
+{% endblock %}

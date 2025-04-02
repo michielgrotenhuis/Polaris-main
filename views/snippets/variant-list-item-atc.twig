@@ -1,0 +1,59 @@
+{% set isOutOfStock = variant.in_stock or variant.inventory_policy == 'continue' ? false : true %}
+{% set variantTitle = variant.option_values | map(v => v.name) | join(" ") %}
+{% set variantTitle = variantTitle ? "" ~ variantTitle : "" %}
+{% set productImage = variant.image ? variant.image.src
+    : (product.images ? product.images[0].src : "/images/product.png" | asset) %}
+
+<div class="product-atc-item" data-variant-id="{{ variant.id }}">
+    <div class="card">
+        <div class="card-holder">
+            <div class="card-holder--img">
+                <a href="{{ routes.product_url | preview_mode(preview_token) | route("s:slug",product.handle) }}?variant={{ variant.id }}"
+                   target="{{ "settings.open_new_tab_product" | setting }}">
+                    {% include "/components/product-image.twig" | storefront_path with {
+                        "image": productImage,
+                        "class": "w-100 h-100 object-fit-cover",
+                        "alt": product.title ~ variantTitle
+                    } only %}
+                </a>
+                {% if variant.sale_price and variant.price %}
+                    <div class="product-badge">
+                        <span class="product-badge--discount">-{{ (100 - variant.sale_price * 100 / variant.price) | round(0,'floor') }}%</span>
+                    </div>
+                {% endif %}
+                {% if variant.in_stock == false %}
+                    <div class="product-info">
+                        <span class="product-info--text">{{ "product.out_of_stock" | trans }}</span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-holder--body">
+                <h4 class="card-holder--title letter-spacing-4">
+                    {{ product.title }} {{ variantTitle }}
+                </h4>
+                <div class="card-holder--price">
+                    {% if variant.sale_price %}
+                        <span class="card-holder--price--current">{{ filter.money(variant.sale_price, shop.currency.code) }}</span>
+                        <del class="card-holder--price--previous">{{ filter.money(variant.price, shop.currency.code) }}</del>
+                    {% else %}
+                        <span class="card-holder--price--current">{{ filter.money(variant.price, shop.currency.code) }}</span>
+                    {% endif %}
+                </div>
+                <hr class="atc-divider"/>
+                {% if "settings.status_add_to_cart" | setting != "hide" %}
+                    <button type="submit"
+                            style="display: {{ isOutOfStock ? "none" : "flex" }}"
+                            class="btn btn-fluid btn-md btn-dark addToCartBtn">
+                        <i class="ph ph-shopping-cart-simple-bold"></i>
+                        <span>{{ "product.add_to_cart" | trans }}</span>
+                    </button>
+                {% endif %}
+                <button class="btn btn-fluid btn-md btn-dark out-of-stock"
+                        style="cursor: not-allowed;background: #333;display: {{ isOutOfStock ? "flex" : "none" }}">
+                    <i class="ph ph-prohibit"></i>
+                    <span>{{ "product.out_of_stock" | trans }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

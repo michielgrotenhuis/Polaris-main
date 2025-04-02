@@ -1,0 +1,11 @@
+{% for order in orders %}
+    <tr data-order-id="{{ order.id }}">
+        <td>
+            <a href="{{ routes.account_order_detail_url | preview_mode(preview_token) | route("i:oid",order.id) }}"
+               class="link">{{ order.name }}</a></td>
+        <td>{{ order.created_at | date("Y-m-d H:i:s") }}</td>
+        <td>{{ order.financial_status }}</td>
+        <td>{{ order.fulfillment_status ? order.fulfillment_status : "unfulfilled" }}</td>
+        <td>{{ filter.money(order.total, order.currency.code) }}</td>
+    </tr>
+{% endfor %}

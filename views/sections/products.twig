@@ -1,0 +1,142 @@
+<style>
+    .product-atc-item .card {
+        height: 100%;
+    }
+
+    .product-atc-item .card .card-holder {
+        height: 100%;
+    }
+
+    .product-atc-item .card .card-holder--body {
+        height: 100%;
+    }
+
+    .product-atc-item .product-detail--variant--list {
+        padding: 0;
+        gap: 4px;
+    }
+
+    .product-atc-item .variant-item--option--list {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 6px;
+    }
+
+    .product-atc-item .product-detail--variant--list .variant-item--option--name {
+        margin: 0;
+        padding: 6px 14px;
+        font-size: 15px;
+    }
+
+    .product-atc-item .product-detail--feature {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .product-atc-item .atc-divider {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #f9f9f9;
+    }
+
+    .product-atc-item .atc-card-bottom {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+    }
+
+    .product-atc-item .atc-card-bottom button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-atc-item .atc-card-bottom .out-of-stock {
+        background-color: #616161 !important;
+    }
+
+    .{{ className }}-swiper-container {
+        display: none;
+    }
+</style>
+
+<div class="swiper {{ className }}-swiper-container">
+    <div class="swiper-wrapper {{ className }}-swiper-wrapper">
+        {% for product in items %}
+            {% if loop.index < show + 1 %}
+                {% for variant in product.variants %}
+                    <div class="swiper-slide {{ className }}-swiper-slide">
+                        {% include "/snippets/variant-list-item-atc.twig" | storefront_path with {
+                            'product' : product,
+                            'variant' : variant
+                        } %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% set imported_script %}
+    <script>
+        adjustSliderHeight('.{{ className }}-swiper-slide');
+        document.addEventListener('DOMContentLoaded', function () {
+            new Swiper('.{{ className }}-swiper-container', {
+                loop: true,
+                grabCursor: true,
+                pagination: {
+                    el: '.{{ className }}-swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.{{ className }}-navigation--next',
+                    prevEl: '.{{ className }}-navigation--prev',
+                },
+                autoplay: {
+                    delay: 5000
+                },
+                breakpoints: {
+                    320: {
+                        slidesPerView: 1.5,
+                        spaceBetween: 15
+                    },
+                    640: {
+                        slidesPerView: 3,
+                        spaceBetween: 20
+                    },
+                    768: {
+                        slidesPerView: 4,
+                        spaceBetween: 20
+                    },
+                    1180: {
+                        slidesPerView: 5,
+                        spaceBetween: 20
+                    }
+                },
+                on: {
+                    imagesReady: function () {
+                        adjustSliderHeight('.{{ className }}-swiper-slide');
+                    },
+                    resize: function () {
+                        adjustSliderHeight('.{{ className }}-swiper-slide');
+                    }
+                }
+            });
+
+            document.querySelector('.{{ className }}-swiper-container').style.display = 'flex';
+        });
+
+        window.addEventListener('load', function () {
+            // Adjust the height of the slider to maintain the aspect ratio of the images
+            window.addEventListener('load', () => {
+                adjustSliderHeight('.{{ className }}-swiper-slide');
+            });
+            window.addEventListener('resize', () => {
+                adjustSliderHeight('.{{ className }}-swiper-slide');
+            });
+        });
+    </script>
+{% endset %}
+
+{% do append_script(imported_script) %}

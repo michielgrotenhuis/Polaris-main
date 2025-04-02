@@ -1,0 +1,167 @@
+<style>
+    .myCollectionSlider-container {
+        position: relative;
+        display: none;
+
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .myCollectionSlider-container .myCollectionSlider-navigation-left {
+        position: absolute;
+        top: 43%;
+        left: 0;
+        transform: translateY(-50%);
+        z-index: 99;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1px solid #d4d4d4;
+        height: 36px;
+        width: 36px;
+    }
+
+    .myCollectionSlider-container .myCollectionSlider-navigation-left:hover {
+        background-color: #f5f5f5;
+    }
+
+    .myCollectionSlider-container .myCollectionSlider-navigation-right {
+        position: absolute;
+        top: 43%;
+        right: 0;
+        transform: translateY(-50%);
+        z-index: 99;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1px solid #d4d4d4;
+        height: 36px;
+        width: 36px;
+    }
+
+    .myCollectionSlider-container .myCollectionSlider-navigation-right:hover {
+        background-color: #f5f5f5;
+    }
+
+    .myCollectionSlider-swiper-container {
+        width: 100%; /* Full width of the container */
+        overflow: hidden; /* Prevent any excess height from showing scrollbars */
+    }
+
+    .myCollectionSlider-swiper-slide {
+        position: relative;
+        background-repeat: no-repeat;
+        background-size: contain; /* Ensures the full image is always visible */
+        background-position: center center; /* Centers the image */
+        width: 100%;
+    }
+
+    .myCollectionSlider-swiper-slide .collection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 10px;
+        height: 100%;
+
+        text-decoration: none;
+    }
+
+    .myCollectionSlider-swiper-slide .collection span {
+        font-size: 15px;
+        font-weight: 600;
+        color: #000;
+        margin-top: 10px;
+        text-decoration: none;
+    }
+
+    .myCollectionSlider-swiper-slide .collection .collection-img {
+        width: 100%;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f5f5f5;
+    }
+</style>
+
+<div class="myCollectionSlider-container">
+    <button class="myCollectionSlider-navigation-left">
+        <i class="ph ph-arrow-left"></i>
+    </button>
+    <button class="myCollectionSlider-navigation-right">
+        <i class="ph ph-arrow-right"></i>
+    </button>
+
+    <div class="swiper myCollectionSlider-swiper-container">
+        <div class="swiper-wrapper myCollectionSlider-swiper-wrapper">
+            {% for collection in collections %}
+                <div class="swiper-slide myCollectionSlider-swiper-slide">
+                    <a href="{{ routes.collection_url | preview_mode(preview_token) | route("s:slug",collection.handle) }}"
+                       class="collection letter-spacing-4" title="{{ collection.title }}">
+                        <div class="collection-img">
+                            <img src="{{ collection.image_url }}"
+                                 class="w-100 h-100 object-fit-cover" alt="{{ collection.title }}">
+                        </div>
+                        <span>{{ collection.title }}</span>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% set imported_script %}
+    <script>
+        adjustSliderHeight('.myCollectionSlider-swiper-slide');
+
+        document.addEventListener('DOMContentLoaded', function () {
+            new Swiper('.myCollectionSlider-swiper-container', {
+                loop: true,
+                grabCursor: true,
+                pagination: false,
+                watchOverflow: true,
+                navigation: {
+                    nextEl: '.myCollectionSlider-navigation-right',
+                    prevEl: '.myCollectionSlider-navigation-left',
+                },
+                autoplay: {
+                    delay: 5000
+                },
+                breakpoints: {
+                    320: {
+                        slidesPerView: 2.5,
+                        spaceBetween: 10
+                    },
+                    480: {
+                        slidesPerView: 5,
+                        spaceBetween: 20
+                    },
+                    640: {
+                        slidesPerView: 6,
+                        spaceBetween: 20
+                    }
+                },
+                on: {
+                    imagesReady: function () {
+                        adjustSliderHeight('.myCollectionSlider-swiper-slide');
+                    },
+                    resize: function () {
+                        adjustSliderHeight('.myCollectionSlider-swiper-slide');
+                    }
+                }
+            });
+
+            document.querySelector('.myCollectionSlider-container').style.display = 'flex';
+        });
+    </script>
+{% endset %}
+
+{% do append_script(imported_script) %}

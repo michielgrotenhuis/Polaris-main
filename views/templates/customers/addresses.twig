@@ -1,0 +1,123 @@
+{% extends '/layouts/account.twig' %}
+
+{% block breadcrumb %}
+    <div class="breadcrumb">
+        <a href="{{ routes.root_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link">{{ "common.home" | trans }}</a>
+        <a href="{{ routes.account_addresses_url | preview_mode(preview_token) }}"
+           class="breadcrumb-link active">{{ "addresses.title" | trans }}</a>
+    </div>
+{% endblock %}
+
+{% block account_heading %}
+    <div class="profile-heading">
+        <h1 class="profile-heading--title">{{ "addresses.title" | trans }}</h1>
+        <div class="profile-heading--action">
+            <a href="{{ routes.account_addresses_create_url | preview_mode(preview_token) }}"
+               class="btn btn-md btn-dark">
+                {{ "addresses.add_address" | trans }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block account_body %}
+    <div class="col-xl-9 col-lg-9 col-md-12 offset-xl-1 mobile-order-1">
+        <div class="row gutter-24">
+            {% for addr in customer.addresses %}
+                <div data-address-id="{{ addr.id }}" class="col-xl-5 col-lg-6 col-md-6 equal-height">
+                    <div class="address-holder equal-height {{ addr.is_default ? "selected" : "" }}">
+                        <div class="address-holder--body">
+                            {% if addr.street.address1 is not empty %}
+                                <h4 class="address-holder--title">{{ addr.street.address1 }}</h4>
+                            {% endif %}
+                            {% if addr.first_name is not empty %}
+                                <span class="address-holder--item">{{ addr.first_name }} {{ addr.last_name }} {{ addr.company_name }}</span>
+                            {% endif %}
+                            {% if addr.street.address2 is not empty %}
+                                <span class="address-holder--item">{{ addr.street.address2 }}</span>
+                            {% endif %}
+                            {% if addr.province is not empty %}
+                                <span class="address-holder--item">{{ addr.province.local_name }}</span>
+                            {% endif %}
+                            {% if addr.city is not empty %}
+                                <span class="address-holder--item">{{ addr.city }} {{ addr.zip }}</span>
+                            {% endif %}
+                            {% if addr.country is not empty %}
+                                <span class="address-holder--item">{{ addr.country.name }}</span>
+                            {% endif %}
+                            {% if addr.phone_number is not empty %}
+                                <span class="address-holder--item">{{ addr.phone_number.number }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="address-holder--action">
+                            <a href="{{ routes.account_addresses_edit_url | preview_mode(preview_token) | route("i:aid",addr.id) }}"
+                               class="btn btn-width-sm btn-outline-md btn-outline btn-outline-primary m-r-8">
+                                {{ "addresses.edit" | trans }}
+                            </a>
+                            <a data-item-id="{{ addr.id }}"
+                               class="btn btn-width-sm btn-outline-md btn-outline btn-outline-primary m-r-8 delete_address_dialog_btn">
+                                {{ "addresses.delete" | trans }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}{{ "addresses.title" | trans  ~ " - " ~ shop.name }}{% endblock %}
+
+{% block modal %}
+    <div id="delete_address_item" class="modal">
+        <p>{{ "modal.delete.text" | trans }}</p>
+        <button class="btn btn-outline-md btn-dark btn-width-sm delete_address_btn">{{ "modal.delete.confirm" | trans }}</button>
+        <button class="btn btn-outline-md btn-width-sm" rel="modal:close">{{ "modal.delete.cancel" | trans }}</button>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        $('.delete_address_dialog_btn').on('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            let id = $(this).attr('data-item-id');
+
+            $('.delete_address_btn').attr('data-item-id', id);
+
+            $('#delete_address_item').modal();
+        });
+
+        $('[rel="modal:close"]').on('click', function () {
+            $.modal.close();
+        });
+
+        $('.delete_address_btn').on('click', function () {
+            showLoading(true);
+
+            let id = $(this).attr('data-item-id');
+
+            let url = '{{ routes.ajax_account_addresses_delete_url | preview_mode(preview_token) }}'.replace('i:aid', id);
+
+            ajaxRequest(url, 'DELETE', {
+                '_token': '{{ csrf_token() }}'
+            }, () => {
+                showLoading(false);
+                $.modal.close();
+                $('[data-address-id="' + id + '"]').remove();
+
+                let addrCountEl = $('.address_count a span');
+
+                let addCount = addrCountEl.text();
+
+                addCount = parseInt(addCount) - 1;
+
+                addrCountEl.text(addCount);
+            }, () => {
+                showLoading(false);
+            });
+        });
+    </script>
+{% endblock %}

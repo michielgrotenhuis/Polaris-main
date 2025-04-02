@@ -1,0 +1,85 @@
+{% if cart.item_count > 0 %}
+    <div class="cart-holder">
+        <div class="cart-list">
+            {% for item in cart.items %}
+                <div data-variant-id="{{ item.variant.id }}" class="cart-list--item">
+                    <div class="cart-list--item--info">
+
+                        <a href="{{ routes.product_url | preview_mode(preview_token) | route("s:slug",item.product.handle) }}"
+                           title="{{ item.product.title }}">
+                            <div class="cart-list--item--img">
+                                <img src="{{ item.variant and item.variant.image
+                                ? item.variant.image.src
+                                : (item.product.images | length > 0 ? item.product.images[0].src : "/images/product.png" | asset) }}"
+                                     class="w-100 h-100 object-fit-cover border-radius-4"
+                                     alt="{{ item.product.title }}">
+                            </div>
+                        </a>
+                        <div class="cart-list--item--content">
+                            <a href="{{ routes.product_url | preview_mode(preview_token) | route("s:slug",item.product.handle) }}"
+                               title="{{ item.product.title }}" style="text-decoration: none">
+                                <h4 class="cart-list--item--title">{{ item.product.title }}</h4>
+                            </a>
+                            <div class="cart-list--item--text">
+                                {% for option in item.variant.option_values %}
+                                    <span class="cart-list--item--feature">
+                                         {{ option.option }}:
+                                        <span class="cart-list--item--feature--option">{{ option.name }}</span>
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cart-list--item--action">
+                        <div class="cart-list--item--quantity quantity-container">
+                            <span class="cart-list--item--quantity--btn decrease ph-minus"></span>
+                            <input type="number"
+                                   class="cart-list--item--quantity--input input-field text-center quantity-amount"
+                                   value="{{ item.quantity }}" readonly>
+                            <span class="cart-list--item--quantity--btn increase ph-plus"></span>
+                        </div>
+                        <div class="cart-list--item--price">
+                            <span class="cart-list--item--price--current">{{ filter.money(item.quantity*item.variant.actual_price, cart.currency.code) }}</span>
+                            <span class="cart-list--item--price--note">({{ filter.money(item.variant.actual_price, cart.currency.code) }} {{ "cart.each" | trans }})</span>
+                        </div>
+                        <button type="submit" class="cart-list--item--remove ph-x-fill"
+                                style="border: 0;background: transparent"></button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="cart-checkout m-t-24">
+            <div class="row gutter-48 flex-end">
+                <div class="col-xl-4 col-lg-4 col-md-6">
+                    <div class="info-item">
+                        <span class="info-item--label color-black-700">{{ "cart.shipping" | trans }}:</span>
+                        <span class="info-item--value">{{ "cart.calculated" | trans }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-item--label color-black-700">{{ "cart.tax" | trans }}:</span>
+                        <span class="info-item--value">{{ "cart.calculated" | trans }}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-item--label font-weight-semibold color-black-700">{{ "cart.total" | trans }} ({{ cart.currency.code }})</span>
+                        <span class="total__price info-item--value font-weight-semibold">{{ filter.money(cart.subtotal_price, cart.currency.code) }}</span>
+                    </div>
+                    <a href="{{ routes.checkout_read | preview_mode(preview_token) | route("*:token",cart.token) }}"
+                       class="btn btn-width-lg btn-md btn-dark m-t-24">
+                        {{ "cart.checkout" | trans }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="empty-cart">
+        <h2 class="empty-cart--title">{{ "cart.empty.text" | trans }}</h2>
+        <div class="empty-cart--action">
+            <a href="{{ routes.all_products_url | preview_mode(preview_token) }}"
+               class="btn btn-width-lg btn-md btn-dark">
+                {{ "cart.continue_shopping" | trans }}
+            </a>
+        </div>
+    </div>
+{% endif %}

@@ -1,0 +1,213 @@
+<style>
+    .mega-menu-container {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        height: 68px;
+        margin: 0 0 0 20px;
+    }
+
+    .mega-menu-container .mega-menu-item {
+        margin-right: 20px;
+        cursor: pointer;
+        position: relative;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mega-menu-container .mega-menu-item .menu-title {
+        padding: 4px 15px;
+    }
+
+    .mega-menu-container .mega-menu-item .mega-menu-drawer {
+        position: absolute;
+        transition: max-height .2s cubic-bezier(0.6, 0, 0.4, 1), opacity .2s ease-in-out;
+        top: 68px;
+        left: 0;
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
+        background-color: #fff;
+        border-top: 1px solid #e0e0e0;
+        padding: 20px;
+        display: none;
+        box-shadow: 0 1px 4px 1px #ececec;
+        width: max-content;
+        max-width: 900px;
+        overflow: hidden;
+        opacity: 0;
+    }
+
+    .mega-menu-container .mega-menu-item:hover .mega-menu-drawer {
+        display: flex;
+        opacity: 1;
+    }
+
+    .mega-menu-container .mega-menu-item:hover .menu-title {
+        background-color: #000;
+        color: white !important;
+        border-radius: 4px;
+    }
+
+    .underline-link {
+        position: relative;
+        text-decoration: none;
+        color: #000;
+    }
+
+    .underline-link:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 1px;
+        background: #000;
+        transition: width .3s;
+        bottom: 0;
+        left: 0;
+    }
+
+    .underline-link:hover:after {
+        width: 100%;
+    }
+
+
+    .mega-menu-drawer > ul {
+        list-style: none;
+        display: flex;
+        padding: 0;
+        margin: 0;
+
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+
+    .mega-menu-drawer > ul > li > span {
+        display: grid;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    /** Menu image side **/
+    .mega-menu-drawer .menu-image-container {
+        margin-left: 50px;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+    }
+
+    .mega-menu-drawer .menu-image-container img {
+        width: 300px;
+        height: 200px;
+        object-fit: cover;
+        background-color: #e0e0e0;
+    }
+
+    .child-menu-item {
+        font-size: 14px;
+        margin: 0 40px 30px 20px;
+    }
+
+    .child-menu-item > a {
+        font-weight: bold;
+        width: fit-content;
+    }
+
+    .child-menu-item > ul {
+        list-style: none;
+        margin: 10px 0 0;
+        display: grid;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 0;
+    }
+
+    .child-menu-item > ul > li > a {
+        font-size: 13px;
+        width: fit-content;
+    }
+
+    .menu-image-container > a {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin: auto 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        background-color: white;
+        color: #000;
+        text-decoration: none;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .menu-image-container > a > span {
+        margin-left: 4px;
+    }
+
+    /* Mobile specific styles */
+    @media screen and (max-width: 768px) {
+        .mega-menu-container {
+            display: none !important; /* Hide on mobile */
+        }
+    }
+
+</style>
+
+<ul class="mega-menu-container">
+    {% for item in items %}
+        <li class="mega-menu-item">
+            <a class="header-holder--navigation--link menu-title"
+               href="{{ item.url | preview_mode(preview_token) }}" title="{{ item.title }}">
+                {{ item.title }}
+            </a>
+            {% if item.children | length > 0 %}
+                <div class="mega-menu-drawer">
+                    <ul>
+                        {% for child in item.children %}
+                            <li class="child-menu-item">
+                                <a class="header-holder--navigation--link underline-link"
+                                   href="{{ child.url | preview_mode(preview_token) }}" title="{{ child.title }}">
+                                    {{ child.title }}
+                                </a>
+                                {% if child.children | length > 0 %}
+                                    <ul>
+                                        {% for ch in child.children %}
+                                            <li>
+                                                <a class="header-holder--navigation--link underline-link"
+                                                   href="{{ ch.url | preview_mode(preview_token) }}"
+                                                   title="{{ ch.title }}">
+                                                    {{ ch.title }}
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% if item.image is not empty %}
+                        <div class="menu-image-container">
+                            <img src="{{ item.image.src }}" alt="{{ item.title }}">
+                            <a href="{{ item.url | preview_mode(preview_token) }}" title="{{ item.title }}">
+                                Show all
+                                <span class="ph-arrow-right"></span>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

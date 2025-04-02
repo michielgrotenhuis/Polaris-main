@@ -1,0 +1,158 @@
+<div class="product-detail">
+    <div class="product-detail--carousel--container">
+        <div style="--swiper-navigation-color: #fff;--swiper-pagination-color: #fff;"
+             class="swiper product-detail--carousel--main">
+            <div class="swiper-wrapper">
+                {% if product.images | length > 0 %}
+                    {% for index,image in product.images %}
+                        <div class="swiper-slide" data-image-id="{{ image.id }}"
+                             data-index="{{ index }}">
+                            <img src="{{ image.src }}"
+                                 class="w-100 h-100 object-fit-contain"
+                                 alt="{{ product.title }}">
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="swiper-slide">
+                        <img src="{{ "/images/product.png" | asset }}"
+                             class="w-100 h-100 object-fit-contain" alt="{{ product.title }}">
+                    </div>
+                {% endif %}
+
+            </div>
+            {% if variant is not empty %}
+                {% if variant.sale_price and variant.price %}
+                    <div class="product-badge">
+                        <span class="product-badge--discount">-{{ (100 - variant.sale_price * 100 / variant.price) | round(0,'floor') }}%</span>
+                    </div>
+                {% endif %}
+            {% else %}
+                {% if product.sale_price and product.price %}
+                    <div class="product-badge">
+                        <span class="product-badge--discount">-{{ (100 - product.sale_price * 100 / product.price) | round(0,'floor') }}%</span>
+                    </div>
+                {% endif %}
+            {% endif %}
+            {% if product.images | length > 1 %}
+                <button class="carousel-btn product-detail--btn--next ph ph-arrow-right"></button>
+                <button class="carousel-btn product-detail--btn--prev ph ph-arrow-left"></button>
+            {% endif %}
+        </div>
+        <div class="swiper product-detail--carousel--thumbs">
+            <div class="swiper-wrapper">
+                {% if product.images | length > 0 %}
+                    {% for index,image in product.images %}
+                        <div class="swiper-slide" data-image-id="{{ image.id }}" data-index="{{ index }}">
+                            <img src="{{ image.src }}" class="w-100 h-100 object-fit-contain"
+                                 alt="{{ product.title }}">
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="product-detail--info">
+        <h1 class="product-detail--title">{{ product.title }}</h1>
+        <div class="product-detail--price">
+            {% if variant.sale_price is not empty %}
+                <span class="product-detail--price--current">{{ filter.money(variant.sale_price, shop.currency.code) }}</span>
+                <del class="product-detail--price--previous">{{ filter.money(variant.price, shop.currency.code) }}</del>
+            {% elseif variant.price is empty or variant.price == 0 %}
+            {% else %}
+                <span class="product-detail--price--current">{{ filter.money(variant.price, shop.currency.code) }}</span>
+            {% endif %}
+        </div>
+        <div class="product-detail--feature">
+
+            <input type="hidden" name="id" value="{{ variant ? variant.id : product.id }}">
+            <input type="hidden" name="preview" value="{{ preview_token }}">
+
+            {% if options is not empty %}
+                <div class="product-detail--variant--list">
+                    {% for key,option in options %}
+                        <div class="variant-item">
+                            <span class="variant-item--value">{{ option.title }}</span>
+                            <div class="variant-item--option--list">
+                                {% for value in option.values %}
+                                    {% set is_selected = value.selected ? "selected" : "" %}
+                                    {% set is_disabled = value.in_stock > 0 or value.inventory_policy == 'continue' ? "" : "disabled" %}
+                                    <button class="variant-item--option--name {{ is_selected }} {{ is_disabled }}"
+                                            data-option-id="{{ option.id }}"
+                                            data-value-title="{{ value.title }}"
+                                            value="{{ value.id }}"
+                                    >
+                                        {{ value.title }}
+                                    </button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% set isOutOfStock = variant.in_stock or variant.inventory_policy == 'continue' ? false : true %}
+
+            <div class="product-detail--action">
+                <div style="display: {{ isOutOfStock ? "none" : "block" }}"
+                     class="cart-list--item--quantity quantity-container">
+                    <span class="cart-list--item--quantity--btn decrease ph-minus"></span>
+                    <input type="number"
+                           name="quantity"
+                           class="cart-list--item--quantity--input input-field text-center quantity-amount"
+                           value="1" readonly/>
+                    <span class="cart-list--item--quantity--btn increase ph-plus"></span>
+                </div>
+
+                {% if "settings.status_add_to_cart" | setting != "hide" %}
+                    <button type="submit"
+                            style="display: {{ isOutOfStock ? "none" : "block" }}"
+                            class="add-to-cart-btn btn btn-fluid btn-md btn-dark addCartBtn">
+                        <span class="btn-icon btn-icon-left ph-shopping-cart-simple"></span> {{ "product.add_to_cart" | trans }}
+                    </button>
+                {% endif %}
+
+                <button class="btn btn-fluid btn-md btn-dark outOfStockBtn"
+                        style="cursor: not-allowed;background: #333;display: {{ isOutOfStock ? "block" : "none" }}">
+                    <strong>{{ "product.out_of_stock" | trans }}</strong>
+                </button>
+            </div>
+            <div class="product-detail--description less-desc">
+                {{ product.body_html | raw }}
+            </div>
+            {% if (variant.weight is not empty) or (product.collections | length > 0) or (product.tags | length > 0) %}
+                <div class="product-detail--extra">
+                    <ul>
+                        {% if variant.weight is not empty and variant.weight > 0 %}
+                            <li>
+                                <span class="product-detail--extra--title">{{ "product.weight" | trans }}</span>
+                                <span class="product-detail--extra--value">{{ variant.weight }} {{ variant.weight_unit }}</span>
+                            </li>
+                        {% endif %}
+                        {% if product.collections | length > 0 %}
+                            <li>
+                                <span class="product-detail--extra--title">{{ "product.collection" | trans }}</span>
+                                <span class="product-detail--extra--value">
+                                        {% for collection in product.collections %}
+                                            <a href="{{ routes.collection_url | preview_mode(preview_token) | route("s:slug",collection.handle) }}">{{ collection.title }}</a>
+                                            {% if not loop.last %},&nbsp;{% endif %}
+                                        {% endfor %}
+                                    </span>
+                            </li>
+                        {% endif %}
+                        {% if product.tags | length > 0 %}
+                            <li>
+                                <span class="product-detail--extra--title">{{ "product.tags" | trans }}</span>
+                                <span class="product-detail--extra--value">
+                                        {% for tag in product.tags %}
+                                            <a href="{{ routes.all_products_url | preview_mode(preview_token) }}?tag={{ tag }}">{{ tag }}</a>
+                                            {% if not loop.last %},&nbsp;{% endif %}
+                                        {% endfor %}
+                                    </span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,158 @@
+<style>
+    .mySlider-swiper-container {
+        width: 100%; /* Full width of the container */
+        overflow: hidden; /* Prevent any excess height from showing scrollbars */
+    }
+
+    .mySlider-swiper-slide {
+        position: relative;
+        background-repeat: no-repeat;
+        background-size: contain; /* Ensures the full image is always visible */
+        background-position: center center; /* Centers the image */
+        width: 100%;
+
+        display: grid;
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+    }
+
+    .mySlider-swiper-slide img {
+        width: 100%;
+        height: 200px;
+    }
+
+    .mySlider-slide-content {
+        padding: 0;
+        margin: 24px 16px;
+        max-width: 550px;
+    }
+
+    .mySlider-slide-content h2 {
+        font-size: 34px;
+        font-style: normal;
+        font-weight: 500;
+        color: #121212;
+        padding: 0;
+        margin: 0;
+    }
+
+    .mySlider-slide-content p {
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 30px;
+        color: #121212;
+        margin: 12px 0 24px;
+    }
+
+    .mySlider-slide-content a {
+        padding: 10px;
+
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 32px;
+        letter-spacing: -0.4px;
+        text-align: center;
+
+        text-decoration: none;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+    }
+
+    .mySlider-slide-content a i {
+        margin-left: 10px;
+        font-size: 18px;
+    }
+
+    .mySlider-swiper-pagination {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="swiper mySlider-swiper-container">
+    <div class="swiper-wrapper mySlider-swiper-wrapper">
+        {% for sliderItem in "home.main_slider_desktop" | setting %}
+            <div class="swiper-slide mySlider-swiper-slide">
+                <img src="{{ sliderItem | list_item("image_url") }}"
+                     class="mySlider-swiper-slide-image"
+                     alt="{{ sliderItem | list_item("title_text") }}">
+                <div class="mySlider-slide-content
+                  {% if sliderItem | list_item("position") | length > 0 %}
+                    content-{{ sliderItem | list_item("position") }}
+                {% else %} content-center {% endif %}
+                    "
+                        {% if sliderItem | list_item("background_color") | length > 0 %}
+                    style="background-color: {{ sliderItem | list_item("background_color") }};"
+                        {% endif %}>
+                    {% if sliderItem | list_item("title_text") | length > 0 %}
+                        <h2>
+                            {{ sliderItem | list_item("title_text") }}
+                        </h2>
+                    {% endif %}
+                    {% if sliderItem | list_item("description_text") | length > 0 %}
+                        <p>
+                            {{ sliderItem | list_item("description_text") }}
+                        </p>
+                    {% endif %}
+                    {% if sliderItem | list_item("button_text") | length > 0 %}
+                        <a href="{{ sliderItem | list_item("button_url") }}"
+                           title="{{ sliderItem | list_item("button_text") }}"
+                           style="
+                           {% if sliderItem | list_item("button_background_color") | length > 0 %}
+                                   background-color: {{ sliderItem | list_item("button_background_color") }};
+                           {% endif %}
+                           {% if sliderItem | list_item("button_text_color") | length > 0 %}
+                                   color: {{ sliderItem | list_item("button_text_color") }};
+                           {% endif %}
+                                   "
+                        >
+                            {{ sliderItem | list_item("button_text") }}
+                            <i class="ph ph-arrow-right"></i>
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="mySlider-swiper-pagination"></div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% set imported_script %}
+    <script>
+        adjustSliderHeight('.mySlider-swiper-slide');
+
+        document.addEventListener('DOMContentLoaded', function () {
+            new Swiper('.mySlider-swiper-container', {
+                loop: true,
+                grabCursor: true,
+                pagination: {
+                    el: '.mySlider-swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                autoplay: {
+                    delay: 5000
+                },
+                on: {
+                    imagesReady: function () {
+                        adjustSliderHeight('.mySlider-swiper-slide');
+                    },
+                    resize: function () {
+                        adjustSliderHeight('.mySlider-swiper-slide');
+                    }
+                }
+            });
+        });
+    </script>
+{% endset %}
+
+{% do append_script(imported_script) %}

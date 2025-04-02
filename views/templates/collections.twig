@@ -1,0 +1,33 @@
+{% extends '/layouts/theme.twig' %}
+
+{% block body %}
+    <main class="main-root">
+        <div class="wrapper">
+            <div class="page-holder">
+                <div class="breadcrumb">
+                    <a href="{{ routes.root_url | preview_mode(preview_token) }}"
+                       class="breadcrumb-link">{{ "common.home" | trans }}</a>
+                    <a href="#" class="breadcrumb-link active">{{ "collections.title" | trans }}</a>
+                </div>
+                <h1 class="page-header--title">{{ "collections.title" | trans }}</h1>
+                <div class="page-container">
+                    <div class="row gutter-32">
+                        {% include 'snippets/collection-items.twig' | storefront_path %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %}
+
+{% block title %}{{ "home.seo_title" | setting ~ " - " ~ shop.name }}{% endblock %}
+
+{% block seo_tags %}
+    <meta name="description"
+          content="{{ "home.seo_description" | trans }}">
+    <meta name="og:title" content="{{ "home.seo_title" | trans }}">
+    <meta name="og:description"
+          content="{{ "home.seo_description" | trans }}">
+    <meta name="og:url" content="{{ canonical_url }}">
+    <meta name="og:image" content="{{ shop.image.src }}">
+{% endblock %}

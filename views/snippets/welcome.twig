@@ -1,0 +1,10 @@
+{% if "header.welcome_text" | setting | length > 0 %}
+    <div class="welcome-store">
+        <a href="{{ "header.welcome_link" | setting }}" class="welcome-store--content">
+                <span class="welcome-store--content--text">
+                    {{ "header.welcome_text" | setting }}
+                </span>
+        </a>
+        <button class="welcome-store--close--icon ph ph-x"></button>
+    </div>
+{% endif %}
