@@ -1,0 +1,599 @@
+[
+  {
+    "key": "home.logo_width",
+    "title": "Width",
+    "element": "img",
+    "element_type": "number",
+    "device_type": null,
+    "group": "logo",
+    "description": null,
+    "data": null,
+    "value": "",
+    "values": null
+  },
+  {
+    "key": "home.logo_height",
+    "title": "Height",
+    "element": "img",
+    "element_type": "number",
+    "device_type": null,
+    "group": "logo",
+    "description": null,
+    "data": null,
+    "value": "",
+    "values": null
+  },
+
+  {
+    "key": "home.main_slider_desktop",
+    "title": "Slider",
+    "element": "div",
+    "element_type": "list",
+    "group": "slider",
+    "limit": 12,
+    "main_element": {
+      "key": "image_url",
+      "element_type": "image"
+    },
+    "description": "Recommended: 1000x720px with max of 2 MB",
+    "fields": [
+      {
+        "key": "title_text",
+        "label": "Title",
+        "element_type": "input",
+        "group": "title"
+      },
+      {
+        "key": "description_text",
+        "title": "Subtitle",
+        "element_type": "textarea",
+        "group": "subtitle"
+      },
+      {
+        "key": "image_url",
+        "label": "Image",
+        "element_type": "image",
+        "group": "image",
+        "description": "You can add up to 10 images (16:9 recommended ratio)",
+        "required": true
+      },
+      {
+        "key": "button_text",
+        "label": "Button text",
+        "element_type": "input",
+        "group": "button"
+      },
+      {
+        "key": "button_text_color",
+        "label": "Button text color",
+        "element_type": "color",
+        "group": "button"
+      },
+      {
+        "key": "button_background_color",
+        "label": "Button background color",
+        "element_type": "color",
+        "group": "button"
+      },
+      {
+        "key": "button_url",
+        "label": "Button url",
+        "element_type": "input",
+        "group": "button"
+      },
+      {
+        "key": "background_color",
+        "label": "Content Background color",
+        "element_type": "color",
+        "group": "content"
+      },
+      {
+        "key": "position",
+        "label": "Content position",
+        "element_type": "select",
+        "data": [
+          {
+            "id": "top-left",
+            "title": "Top Left"
+          },
+          {
+            "id": "top-right",
+            "title": "Top Right"
+          },
+          {
+            "id": "bottom-left",
+            "title": "Bottom Left"
+          },
+          {
+            "id": "bottom-right",
+            "title": "Bottom Right"
+          },
+          {
+            "id": "center",
+            "title": "Center"
+          },
+          {
+            "id": "top-center",
+            "title": "Top Center"
+          },
+          {
+            "id": "bottom-center",
+            "title": "Bottom Center"
+          },
+          {
+            "id": "left-center",
+            "title": "Left Center"
+          },
+          {
+            "id": "right-center",
+            "title": "Right Center"
+          }
+        ],
+        "group": "content"
+      }
+    ],
+    "values": [
+      [
+        {
+          "key": "title_text",
+          "label": "Title",
+          "element_type": "input",
+          "value": "Your dream shop is a click away.",
+          "group": "title"
+        },
+        {
+          "key": "description_text",
+          "title": "Subtitle",
+          "element_type": "textarea",
+          "value": "Keep your everyday style chic and on-trend with our selection styles to choose from.",
+          "group": "subtitle"
+        },
+        {
+          "key": "image_url",
+          "label": "Image",
+          "element_type": "image",
+          "value": "https:\/\/cdn.uvodo.com\/themes\/polaris\/item2.png",
+          "group": "image",
+          "description": "You can add up to 10 images (16:9 recommended ratio)",
+          "required": true
+        },
+        {
+          "key": "button_text",
+          "label": "Button text",
+          "element_type": "input",
+          "value": "Shop now",
+          "group": "button"
+        },
+        {
+          "key": "button_text_color",
+          "label": "Button text color",
+          "element_type": "color",
+          "value": "#ffffff",
+          "group": "button"
+        },
+        {
+          "key": "button_background_color",
+          "label": "Button background color",
+          "element_type": "color",
+          "value": "#000000",
+          "group": "button"
+        },
+        {
+          "key": "button_url",
+          "label": "Button url",
+          "element_type": "input",
+          "value": "\/",
+          "group": "button"
+        },
+        {
+          "key": "background_color",
+          "label": "Content Background color",
+          "element_type": "color",
+          "value": "#ffffff",
+          "group": "content"
+        },
+        {
+          "key": "position",
+          "label": "Content position",
+          "element_type": "select",
+          "value": "right-center",
+          "data": [
+            {
+              "id": "top-left",
+              "title": "Top Left"
+            },
+            {
+              "id": "top-right",
+              "title": "Top Right"
+            },
+            {
+              "id": "bottom-left",
+              "title": "Bottom Left"
+            },
+            {
+              "id": "bottom-right",
+              "title": "Bottom Right"
+            },
+            {
+              "id": "center",
+              "title": "Center"
+            },
+            {
+              "id": "top-center",
+              "title": "Top Center"
+            },
+            {
+              "id": "bottom-center",
+              "title": "Bottom Center"
+            },
+            {
+              "id": "left-center",
+              "title": "Left Center"
+            },
+            {
+              "id": "right-center",
+              "title": "Right Center"
+            }
+          ],
+          "group": "content"
+        }
+      ],
+      [
+        {
+          "key": "title_text",
+          "label": "Title",
+          "element_type": "input",
+          "value": "Your dream shop is a click away.",
+          "group": "title"
+        },
+        {
+          "key": "description_text",
+          "title": "Subtitle",
+          "element_type": "textarea",
+          "value": "Keep your everyday style chic and on-trend with our selection styles to choose from.",
+          "group": "subtitle"
+        },
+        {
+          "key": "image_url",
+          "label": "Image",
+          "element_type": "image",
+          "value": "https:\/\/cdn.uvodo.com\/themes\/polaris\/item1.png",
+          "group": "image",
+          "description": "You can add up to 10 images (16:9 recommended ratio)",
+          "required": true
+        },
+        {
+          "key": "button_text",
+          "label": "Button text",
+          "element_type": "input",
+          "value": "Shop now",
+          "group": "button"
+        },
+        {
+          "key": "button_text_color",
+          "label": "Button text color",
+          "element_type": "color",
+          "value": "#ffffff",
+          "group": "button"
+        },
+        {
+          "key": "button_background_color",
+          "label": "Button background color",
+          "element_type": "color",
+          "value": "#000000",
+          "group": "button"
+        },
+        {
+          "key": "button_url",
+          "label": "Button url",
+          "element_type": "input",
+          "value": "\/",
+          "group": "button"
+        },
+        {
+          "key": "background_color",
+          "label": "Content Background color",
+          "element_type": "color",
+          "value": "#ffffff",
+          "group": "content"
+        },
+        {
+          "key": "position",
+          "label": "Content position",
+          "element_type": "select",
+          "value": "top-left",
+          "data": [
+            {
+              "id": "top-left",
+              "title": "Top Left"
+            },
+            {
+              "id": "top-right",
+              "title": "Top Right"
+            },
+            {
+              "id": "bottom-left",
+              "title": "Bottom Left"
+            },
+            {
+              "id": "bottom-right",
+              "title": "Bottom Right"
+            },
+            {
+              "id": "center",
+              "title": "Center"
+            },
+            {
+              "id": "top-center",
+              "title": "Top Center"
+            },
+            {
+              "id": "bottom-center",
+              "title": "Bottom Center"
+            },
+            {
+              "id": "left-center",
+              "title": "Left Center"
+            },
+            {
+              "id": "right-center",
+              "title": "Right Center"
+            }
+          ],
+          "group": "content"
+        }
+      ]
+    ]
+  },
+  {
+    "key": "home.main_slider_desktop_visibility",
+    "title": "Visibility",
+    "element": "div",
+    "element_type": "select",
+    "device_type": null,
+    "group": "slider",
+    "description": null,
+    "data": [
+      {
+        "id": "hide",
+        "title": "Hide"
+      },
+      {
+        "id": "show",
+        "title": "Show"
+      }
+    ],
+    "value": "show"
+  },
+
+  {
+    "key": "home.connect_title",
+    "title": "Title",
+    "element": "h3",
+    "element_type": "input",
+    "device_type": null,
+    "group": "connect",
+    "description": null,
+    "data": null,
+    "value": "Easy to connect",
+    "values": null
+  },
+  {
+    "key": "home.connect_description",
+    "title": "Description",
+    "element": "p",
+    "element_type": "textarea",
+    "device_type": null,
+    "group": "connect",
+    "description": null,
+    "data": null,
+    "value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae diam eu nulla tincidunt tincidunt. Sed euismod, diam quis aliquam tincidunt, nibh mauris aliquam diam, eu aliquam diam semper tortor. ",
+    "values": null
+  },
+  {
+    "key": "home.connect_placeholder",
+    "title": "Placeholder",
+    "element": "input",
+    "element_type": "input",
+    "device_type": null,
+    "group": "connect",
+    "description": null,
+    "data": null,
+    "value": "Enter your email address",
+    "values": null
+  },
+  {
+    "key": "home.connect_bg_color",
+    "title": "Background color",
+    "element": "div",
+    "element_type": "color",
+    "device_type": null,
+    "group": "connect",
+    "description": null,
+    "data": null,
+    "value": "#f2f2f2",
+    "values": null
+  },
+  {
+    "key": "home.connect_color",
+    "title": "Color",
+    "element": "div",
+    "element_type": "color",
+    "device_type": null,
+    "group": "connect",
+    "description": null,
+    "data": null,
+    "value": "#121212",
+    "values": null
+  },
+  {
+    "key": "home.connect_visibility",
+    "title": "Visibility",
+    "element": "div",
+    "element_type": "select",
+    "device_type": null,
+    "group": "connect",
+    "description": null,
+    "data": [
+      {
+        "id": "hide",
+        "title": "Hide"
+      },
+      {
+        "id": "show",
+        "title": "Show"
+      }
+    ],
+    "value": "show"
+  },
+
+  {
+    "key": "home.media",
+    "title": "Media",
+    "element": "div",
+    "element_type": "list",
+    "device_type": null,
+    "limit": 12,
+    "main_element": {
+      "key": "url",
+      "element_type": "iframe"
+    },
+    "fields": [
+      {
+        "key": "url",
+        "label": "Video URL",
+        "element_type": "input",
+        "value": "",
+        "group": "video",
+        "description": "You can add up to 10 videos",
+        "required": true
+      }
+    ],
+    "group": "media",
+    "description": null,
+    "data": null,
+    "value": null,
+    "values": [
+      [
+        {
+          "key": "url",
+          "label": "Video URL",
+          "element_type": "input",
+          "value": "https:\/\/www.youtube.com\/embed\/xqyUdNxWazA?si=sPaQt7LwdSJhxYTP",
+          "group": "video",
+          "required": true
+        }
+      ],
+      [
+        {
+          "key": "url",
+          "label": "Video URL",
+          "element_type": "input",
+          "value": "https:\/\/www.youtube.com\/embed\/BSYsXVFzmKA?si=nI1AvzEXHugkVNhj",
+          "group": "video",
+          "required": true
+        }
+      ],
+      [
+        {
+          "key": "url",
+          "label": "Video URL",
+          "element_type": "input",
+          "value": "https:\/\/www.youtube.com\/embed\/njX2bu-_Vw4?si=Gfw4F6cRO3RtPpDM",
+          "group": "video",
+          "required": true
+        }
+      ]
+    ]
+  },
+  {
+    "key": "home.media_channel_link",
+    "title": "Media Channel Link",
+    "element": "div",
+    "element_type": "url",
+    "device_type": null,
+    "group": "media",
+    "description": null,
+    "data": null,
+    "value": "https:\/\/www.youtube.com\/@Apple",
+    "values": null
+  },
+  {
+    "key": "home.media_channel_text",
+    "title": "Media Channel Text",
+    "element": "a",
+    "element_type": "input",
+    "device_type": null,
+    "group": "media",
+    "description": null,
+    "data": null,
+    "value": "Watch more videos"
+  },
+  {
+    "key": "home.media_channel_text_color",
+    "title": "Media Channel Color",
+    "element": "a",
+    "element_type": "color",
+    "device_type": null,
+    "group": "media",
+    "description": null,
+    "data": null,
+    "value": "#ffffff"
+  },
+  {
+    "key": "home.media_channel_bg_color",
+    "title": "Media Channel Background",
+    "element": "a",
+    "element_type": "color",
+    "device_type": null,
+    "group": "media",
+    "description": null,
+    "data": null,
+    "value": "#c4302b"
+  },
+  {
+    "key": "home.media_visibility",
+    "title": "Visibility",
+    "element": "div",
+    "element_type": "select",
+    "device_type": null,
+    "group": "media",
+    "description": null,
+    "data": [
+      {
+        "id": "hide",
+        "title": "Hide"
+      },
+      {
+        "id": "show",
+        "title": "Show"
+      }
+    ],
+    "value": "show"
+  },
+
+  {
+    "key": "home.seo_title",
+    "title": "Meta title",
+    "element": "meta",
+    "element_type": "input",
+    "device_type": null,
+    "group": "seo",
+    "description": null,
+    "data": null,
+    "value": "Home Page",
+    "values": null
+  },
+  {
+    "key": "home.seo_description",
+    "title": "Meta description",
+    "element": "meta",
+    "element_type": "input",
+    "device_type": null,
+    "group": "seo",
+    "description": null,
+    "data": null,
+    "value": "Home Page Description",
+    "values": null
+  }
+]

@@ -1,0 +1,83 @@
+[
+  {
+    "key": "fonts.primary_font",
+    "title": "Primary font",
+    "element": "span",
+    "element_type": "select",
+    "group": "Fonts",
+    "data": [
+      {
+        "id": "Inter",
+        "title": "Inter",
+        "is_google": true
+      },
+      {
+        "id": "Roboto",
+        "title": "Roboto",
+        "is_google": true
+      },
+      {
+        "id": "Open Sans",
+        "title": "Open Sans",
+        "is_google": true
+      },
+      {
+        "id": "Montserrat",
+        "title": "Montserrat",
+        "is_google": true
+      },
+      {
+        "id": "Oswald",
+        "title": "Oswald",
+        "is_google": true
+      },
+      {
+        "id": "Source Sans Pro",
+        "title": "Source Sans Pro",
+        "is_google": true
+      },
+      {
+        "id": "PT Sans",
+        "title": "PT Sans",
+        "is_google": true
+      },
+      {
+        "id": "Playfair Display",
+        "title": "Playfair Display",
+        "is_google": true
+      },
+      {
+        "id": "Lato",
+        "title": "Lato",
+        "is_google": true
+      },
+      {
+        "id": "Nunito",
+        "title": "Nunito",
+        "is_google": true
+      },
+      {
+        "id": "Poppins",
+        "title": "Poppins",
+        "is_google": true
+      },
+      {
+        "id": "Quicksand",
+        "title": "Quicksand",
+        "is_google": true
+      },
+      {
+        "id": "Raleway",
+        "title": "Raleway",
+        "is_google": true
+      },
+      {
+        "id": "Clash Display",
+        "title": "Clash Display",
+        "is_google": false,
+        "link": "https://cdn.uvodo.com/fonts/clash-display/display.css"
+      }
+    ],
+    "value": "Inter"
+  }
+]

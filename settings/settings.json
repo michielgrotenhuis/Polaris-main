@@ -1,0 +1,148 @@
+[
+  {
+    "key": "settings.status_add_to_cart",
+    "title": "Hide\/Show Add to cart",
+    "element": "select",
+    "element_type": "select",
+    "device_type": null,
+    "group": "add_to_cart",
+    "description": null,
+    "data": [
+      {
+        "id": "hide",
+        "title": "Hide"
+      },
+      {
+        "id": "show",
+        "title": "Show"
+      }
+    ],
+    "value": "show",
+    "values": null
+  },
+  {
+    "key": "settings.open_new_tab_product",
+    "title": "Open product link in",
+    "element": "span",
+    "element_type": "select",
+    "device_type": null,
+    "group": "links",
+    "description": null,
+    "data": [
+      {
+        "id": "_blank",
+        "title": "New tab"
+      },
+      {
+        "id": "_self",
+        "title": "Same tab"
+      }
+    ],
+    "value": "_self",
+    "values": null
+  },
+  {
+    "key": "settings.product_price_type",
+    "title": "Show product in its",
+    "element": "span",
+    "element_type": "select",
+    "device_type": null,
+    "group": "product",
+    "description": null,
+    "data": [
+      {
+        "id": "lower_price",
+        "title": "Lowest price"
+      },
+      {
+        "id": "higher_price",
+        "title": "Highest price"
+      },
+      {
+        "id": "range_price",
+        "title": "Price range"
+      }
+    ],
+    "value": "lower_price",
+    "values": null
+  },
+  {
+    "key": "settings.product_image_size",
+    "title": "Image sizing",
+    "element": "img",
+    "element_type": "select",
+    "device_type": null,
+    "group": "product",
+    "description": null,
+    "data": [
+      {
+        "id": "cover",
+        "title": "Cover"
+      },
+      {
+        "id": "contain",
+        "title": "Contain"
+      }
+    ],
+    "value": "cover",
+    "values": null
+  },
+  {
+    "key": "settings.collection_image_size",
+    "title": "Image sizing",
+    "element": "img",
+    "element_type": "select",
+    "device_type": null,
+    "group": "collection",
+    "description": null,
+    "data": [
+      {
+        "id": "cover",
+        "title": "Cover"
+      },
+      {
+        "id": "contain",
+        "title": "Contain"
+      }
+    ],
+    "value": "cover",
+    "values": null
+  },
+
+  {
+    "key": "settings.custom_code_for_header",
+    "title": "For header",
+    "element": "code",
+    "element_type": "textarea",
+    "device_type": null,
+    "group": "custom_code",
+    "description": "If you want to add custom style , you have to use style tags.",
+    "data": null,
+    "value": "",
+    "values": null
+  },
+  {
+    "key": "settings.custom_code_for_footer",
+    "title": "For footer",
+    "element": "code",
+    "element_type": "textarea",
+    "device_type": null,
+    "group": "custom_code",
+    "description": "If you want to add custom script , you have to use script tags.",
+    "data": null,
+    "value": "",
+    "values": null
+  },
+  {
+    "key": "settings.custom_code_for_body",
+    "title": "For body",
+    "element": "code",
+    "element_type": "textarea",
+    "device_type": null,
+    "group": "custom_code",
+    "description": "Your custom code will be added to the start of the body tag. There is not any parent element.",
+    "data": null,
+    "value": "",
+    "values": null
+  }
+]
